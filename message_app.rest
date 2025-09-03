@@ -1,0 +1,59 @@
+### All the HTTP Unit Tests for the End Points
+
+### Testing the / GET Route
+GET http://localhost:7777/
+
+
+### Post requests are used to send data over which in this case is the username and password
+
+### Testing the Register at /auth/register POST request
+
+POST http://localhost:7777/auth/register/
+Content-Type: application/json
+
+{
+    "username": "infer3monk",
+    "password": "theGoat"
+}
+### Testing the Login at /auth/login POST request
+POST http://localhost:7777/auth/login/
+Content-Type: application/json
+
+{
+    "username": "fer.dani.ordaz@gmail.com",
+    "password": "theGoat"
+}
+
+### Create a new message using a post request to the /messages/ endpoint using user 1 as the default
+POST http://localhost:7777/messages/
+Content-Type: application/json
+Authorization: yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU1MDIyMzU0LCJleHAiOjE3NTUxMDg3NTR9.eeSz32sYr_5POTmsfrhm2b22wgEdOY8BG_VZc7Yk97I
+{
+    "text": "This is me sending a message"
+}
+
+### Get all messages sent by everyone
+GET http://localhost:7777/messages/all/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU2MDU0MTg0LCJleHAiOjE3NTYxNDA1ODR9.NB30K1jEcwbWd6FlxA-3mjWCgzBBdKRo_zCSygHcEEg
+
+
+### Get all messages sent by a specific user
+GET http://localhost:7777/messages/user/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzUyNzkyMjY4LCJleHAiOjE3NTI4Nzg2Njh9.p6idJmFI5jp7uXjHfLE5k9Y_G7wXKxctdxn5YIv-d6g
+### Edit a message using dynamic id, also double checking for message ownership
+PUT http://localhost:7777/messages/3
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzUyNzkyMTcwLCJleHAiOjE3NTI4Nzg1NzB9.2ahhXq9AQLpObLPIROl7g03MdtZR25ostH25n5rC1Uo
+Content-Type: application/json
+
+{
+    "text": "this is my edited message"
+}
+
+### Delete a message using dynamic id, also double checking for message ownership
+DELETE http://localhost:7777/messages/3
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzUyNzkyMTcwLCJleHAiOjE3NTI4Nzg1NzB9.2ahhXq9AQLpObLPIROl7g03MdtZR25ostH25n5rC1Uo
+
+### Verify if a token is valid
+GET http://localhost:7777/messages/verifyToken/
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU0NTk1ODAxLCJleHAiOjE3NTQ2ODIyMDF9.vQuhrr70ocIzvpXxw4bI_Ekqahz3C-aLbZ-PHQQGPTI
