@@ -1,0 +1,5 @@
+.env
+node_modules
+README.md
+.gitignore
+message_app.rest
