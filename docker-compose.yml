@@ -1,0 +1,15 @@
+  services:
+    app:
+      build: .
+      ports:
+        - "7777:7777"
+      volumes:
+        - .:/usr/src/app
+        - node_modules:/usr/src/app/node_modules
+      environment:
+        NODE_ENV: development
+        PORT: 7777
+        JWT_SECRET: thisIsMySecretMessagingAppKey
+      command: npm run prod
+  volumes:
+    node_modules:

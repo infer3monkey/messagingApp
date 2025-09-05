@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --trace-warnings --watch --env-file=.env ./src/server.js",
+    "prod": "node --trace-warnings ./src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
