@@ -13,6 +13,10 @@ import authMiddleware from './middleware/authMiddleware.js'
 const app = express()
 const port = process.env.PORT || 5004
 
+// Setting up the postGres Database
+import setupTables from './dbSetup.js';
+await setupTables();
+
 // Get File Path, Use that to get the Directory Path
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

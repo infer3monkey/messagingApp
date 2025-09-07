@@ -1,13 +1,14 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import pool from '../db.js'
 import db from '../db.js'
 
 const router = express.Router()
 
 // Notice how these only get callued when in the /auth route so /auth is not needed in this
 // Register a new user endpoint POST /auth/register
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const {username, password} = req.body //Gives Access to the JSON
 
     // Adding constraints for the username and password such as character requirement and such
@@ -49,7 +50,7 @@ router.post('/register', (req, res) => {
     }
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const {username, password} = req.body //Gives Access to the JSON
 
     try {

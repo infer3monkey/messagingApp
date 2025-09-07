@@ -10,6 +10,26 @@
         NODE_ENV: development
         PORT: 7777
         JWT_SECRET: thisIsMySecretMessagingAppKey
+        PGHOST: db
+        PGUSER: user123
+        PGPASSWORD: password123
+        PGDATABASE: db123
+        PGPORT: 5432
+      depends_on:
+        - db
       command: npm run prod
+    db:
+      image: postgres:15-alpine
+      restart: always
+      environment:
+        POSTGRES_USER: user123
+        POSTGRES_PASSWORD: password123
+        POSTGRES_DB: db123
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+        
   volumes:
     node_modules:
+    pgdata:

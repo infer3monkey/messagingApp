@@ -1,4 +1,17 @@
-// Database in SQLite
+import pkg from 'pg';
+const { Pool } = pkg;
+
+const pool = new Pool({
+    host: 'db',
+    port: 5432,
+    user: 'user123',
+    password: 'password123',
+    database: 'db123'
+})
+
+export default pool
+
+/* Database in SQLite
 import { DatabaseSync } from 'node:sqlite'
 const db = new DatabaseSync(':memory:') // In memory Database, not production quality
 
@@ -22,4 +35,4 @@ db.exec(`
 `)
 
 // Allows you to use db in other files
-export default db
+export default db */
