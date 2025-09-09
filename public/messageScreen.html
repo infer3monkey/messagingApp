@@ -2,172 +2,173 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-    <title>Fireplace</title>
-    <!-- css was primarily made by ai with some modifications -->
-    <style>
-        body {
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        <script src="/socket.io/socket.io.js"></script>
+        <title>Fireplace</title>
+        <!-- css was primarily made by ai with some modifications -->
+        <style>
+            body {
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-        .message-card {
-            background: black;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px 0 rgba(200, 0, 0, 0.9);
-            padding: 40px 32px;
-            min-width: 320px;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            width: 1000px;
-        }
+            .message-card {
+                background: black;
+                border-radius: 18px;
+                box-shadow: 0 8px 32px 0 rgba(200, 0, 0, 0.9);
+                padding: 40px 32px;
+                min-width: 320px;
+                max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+                width: 1000px;
+            }
 
-        .message-card h1 {
-            margin: 0 0 20px 0;
-            font-size: 2.1em;
-            font-weight: 700;
-            color: rgb(200, 100, 0);
-            text-align: center;
-            letter-spacing: 1px;
-        }
+            .message-card h1 {
+                margin: 0 0 20px 0;
+                font-size: 2.1em;
+                font-weight: 700;
+                color: rgb(200, 100, 0);
+                text-align: center;
+                letter-spacing: 1px;
+            }
 
-        #messages {
-            background: rgba(46, 45, 45, 1);
-            border: 1px solid rgb(200, 100, 0);
-            border-radius: 8px;
-            min-height: 500px;
-            max-height: 600px;
-            overflow-y: auto;
-            padding: 15px;
-            font-size: 1em;
-            color: #333;
-        }
+            #messages {
+                background: rgba(46, 45, 45, 1);
+                border: 1px solid rgb(200, 100, 0);
+                border-radius: 8px;
+                min-height: 500px;
+                max-height: 600px;
+                overflow-y: auto;
+                padding: 15px;
+                font-size: 1em;
+                color: #333;
+            }
 
-        form {
-            display: flex;
-            gap: 12px;
-        }
+            form {
+                display: flex;
+                gap: 12px;
+            }
 
-        form input[type="text"] {
-            flex-grow: 1;
-            padding: 10px 12px;
-            border-radius: 6px;
-            border: 1px solid rgb(200, 100, 0);;
-            font-size: 1em;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-            background: rgba(46, 45, 45, 1);
-            color: rgb(200, 100, 0);
-        }
+            form input[type="text"] {
+                flex-grow: 1;
+                padding: 10px 12px;
+                border-radius: 6px;
+                border: 1px solid rgb(200, 100, 0);;
+                font-size: 1em;
+                transition: border-color 0.2s, box-shadow 0.2s;
+                outline: none;
+                background: rgba(46, 45, 45, 1);
+                color: rgb(200, 100, 0);
+            }
 
-        form input[type="text"]:focus {
-            border-color: rgb(200, 100, 0);
-            box-shadow: 0 0 16px rgb(200, 100, 0);;
-        }
+            form input[type="text"]:focus {
+                border-color: rgb(200, 100, 0);
+                box-shadow: 0 0 16px rgb(200, 100, 0);;
+            }
 
-        form button[type="submit"] {
-            padding: 10px 28px;
-            background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            color: black;
-            border: 3px solid rgba(200, 0, 0, 0.9);
-            border-radius: 6px;
-            font-size: 1.05em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
-        }
+            form button[type="submit"] {
+                padding: 10px 28px;
+                background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                color: black;
+                border: 3px solid rgba(200, 0, 0, 0.9);
+                border-radius: 6px;
+                font-size: 1.05em;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.2s;
+                box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
+            }
 
-        form button[type="submit"]:hover {
-            background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            transform: translateY(-2px) scale(1.04);
-        }
+            form button[type="submit"]:hover {
+                background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                transform: translateY(-2px) scale(1.04);
+            }
 
-        /* My Personal Css */
-        .usernameElement {
-            color: rgb(200, 100, 0);
-            display: inline;
-        }
+            /* My Personal Css */
+            .usernameElement {
+                color: rgb(200, 100, 0);
+                display: inline;
+            }
 
-        p.messageElement {
-            color: rgb(200, 100, 0);
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            padding: 8px 12px;
-            line-height: 1.4;
-            border: 1px solid rgb(200, 100, 0);
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-        }
+            p.messageElement {
+                color: rgb(200, 100, 0);
+                display: block;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                font-size: 16px;
+                padding: 8px 12px;
+                line-height: 1.4;
+                border: 1px solid rgb(200, 100, 0);
+                border-radius: 4px;
+                box-sizing: border-box;
+                width: 100%;
+            }
 
-        input.messageElement {
-            color: rgb(200, 0, 0);
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            padding: 8px 12px;
-            line-height: 1.4;
-            background: rgba(46, 45, 45, 1);
-            border: 1px solid rgb(200, 0, 0);
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-        }
+            input.messageElement {
+                color: rgb(200, 0, 0);
+                display: block;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                font-size: 16px;
+                padding: 8px 12px;
+                line-height: 1.4;
+                background: rgba(46, 45, 45, 1);
+                border: 1px solid rgb(200, 0, 0);
+                border-radius: 4px;
+                box-sizing: border-box;
+                width: 100%;
+            }
 
-        .buttonElement {
-            min-height: 20px;
-            min-width: 50px;
-            background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            color: black;
-            border: 3px solid rgba(200, 0, 0, 0.9);
-            border-radius: 6px;
-            font-size: 1.05em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
-            margin-left: 10px;
-        }
+            .buttonElement {
+                min-height: 20px;
+                min-width: 50px;
+                background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                color: black;
+                border: 3px solid rgba(200, 0, 0, 0.9);
+                border-radius: 6px;
+                font-size: 1.05em;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.2s;
+                box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
+                margin-left: 10px;
+            }
 
-        .buttonElement:hover {
-            background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            transform: translateY(-2px) scale(1.04);
-        }
+            .buttonElement:hover {
+                background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                transform: translateY(-2px) scale(1.04);
+            }
 
-        .logoutButton {
-            background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            color: black;
-            border: 3px solid black;
-            border-radius: 6px;
-            font-size: 1.05em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
-            position: fixed;
-            top: 0;
-            right: 0;
-            margin: 16px;
-            padding: 10px 28px;
-        }
+            .logoutButton {
+                background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                color: black;
+                border: 3px solid black;
+                border-radius: 6px;
+                font-size: 1.05em;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.2s;
+                box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
+                position: fixed;
+                top: 0;
+                right: 0;
+                margin: 16px;
+                padding: 10px 28px;
+            }
 
-        .logoutButton:hover {
-            background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
-            transform: translateY(-2px) scale(1.04);
-        }
+            .logoutButton:hover {
+                background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+                transform: translateY(-2px) scale(1.04);
+            }
 
-    </style>
+        </style>
     </head>
     <body>
 
@@ -192,6 +193,16 @@
             // Should send person back to the normal website if they don't have a valid token
             const token = localStorage.getItem('token') || null
 
+            // Socket Stuff
+            const socket = io();
+
+            socket.on('connect', () => {
+                console.log('Connected with ID:', socket.id);
+            });
+
+            // Sends a message to server
+            //socket.emit('message', 'Hello from client!');
+
             function logout() {
                 localStorage.setItem('token', null)
                 console.log("logged out")
@@ -211,6 +222,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    socket.emit('loadMessages', 'sentMessage')
                     loadAllMessages()
                 })
                 .catch(error => {
@@ -228,6 +240,7 @@
                 .then(response => response.json())
                 .then(data => {
                     // Maybe check if it was successful?
+                    socket.emit('loadMessages', 'deletedMessage')
                     messageDiv.remove()
                 })
             }
@@ -265,6 +278,7 @@
                     .then(response => response.json())
                     .then(data => {
                         //messageDiv.remove()
+                        socket.emit('loadMessages', 'editedMessage')
                         messageElement.replaceWith(newMessageElement)
                     })
 
@@ -374,6 +388,12 @@
 
             checkIfValidToken()
             loadAllMessages()
+
+            // This will be run when we want to load all messages cause someone changed something
+            socket.on('loadMessages', (msg) => {
+                //console.log('Received:', msg);
+                loadAllMessages();
+            });
 
         </script>
     </body>

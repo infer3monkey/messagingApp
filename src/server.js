@@ -4,6 +4,10 @@ import express from 'express'
 import path, {dirname} from 'path'
 import { fileURLToPath } from 'url'
 
+// Socket.io imports
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 // Routes/Middleware
 import authRoutes from './routes/authRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
@@ -16,6 +20,14 @@ const port = process.env.PORT || 5004
 // Setting up the postGres Database
 import setupTables from './dbSetup.js';
 await setupTables();
+
+// Socket.io setup
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*", //Allows all origins, can make it only allow certain
+    },
+});
 
 // Get File Path, Use that to get the Directory Path
 const __filename = fileURLToPath(import.meta.url)
@@ -39,7 +51,24 @@ app.get('/messageScreen/', (req, res) => {
 app.use('/auth', authRoutes)
 app.use('/messages', authMiddleware, messageRoutes)
 
+// Sets up socket.io connection and events
+io.on('connection', (socket) => {
+    console.log('A client connected:', socket.id);
+
+    // Listen for a custom event from the client
+    socket.on('loadMessages', (msg) => {
+        console.log('Received message:', msg);
+        // Optionally broadcast to other clients
+        socket.broadcast.emit('loadMessages', msg);
+    });
+
+    // Handle client disconnect event
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+    });
+});
+
 // Sets the server up to start listening as setup is complete
-app.listen(port, ()=>{
+httpServer.listen(port, ()=>{
     console.log(`Server has started on port: ${port}`)
 })
