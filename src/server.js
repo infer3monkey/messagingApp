@@ -1,27 +1,15 @@
-import express from 'express'
+import express from 'express' // express.js
+import path, {dirname} from 'path' // Utility function
+import { fileURLToPath } from 'url' // Utility function
+import { createServer } from "http"; // http servers for socket.io
+import { Server } from "socket.io"; // socket.io
+import authRoutes from './routes/authRoutes.js' // Routes
+import messageRoutes from './routes/messageRoutes.js' // Routes
+import authMiddleware from './middleware/authMiddleware.js' // Middleware
+import setupTables from './dbSetup.js'; // Setting function for postGres Database
 
-// Utility Functions From Node
-import path, {dirname} from 'path'
-import { fileURLToPath } from 'url'
-
-// Socket.io imports
-import { createServer } from "http";
-import { Server } from "socket.io";
-
-// Routes/Middleware
-import authRoutes from './routes/authRoutes.js'
-import messageRoutes from './routes/messageRoutes.js'
-import authMiddleware from './middleware/authMiddleware.js'
-
-// Setting up the port and express application
+// Setting up the http server to listen for express and socket.io
 const app = express()
-const port = process.env.PORT || 5004
-
-// Setting up the postGres Database
-import setupTables from './dbSetup.js';
-await setupTables();
-
-// Socket.io setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -29,46 +17,43 @@ const io = new Server(httpServer, {
     },
 });
 
-// Get File Path, Use that to get the Directory Path
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+await setupTables(); // Setup the postGres Database
 
-// Middleware
+const __filename = fileURLToPath(import.meta.url) // Grab file path
+const __dirname = dirname(__filename) // Grab directory path
+
 app.use(express.json()) // App now expects json, allows it to interpret json
-app.use(express.urlencoded({ extended: true}))
-app.use(express.static(path.join(__dirname, "../public"))) //All Files from the public directory aka the html/css files will be static
+app.use(express.urlencoded({ extended: true})) // Allows us to access the values from the request (think req.body)
+app.use(express.static(path.join(__dirname, "../public"))) // All Files from public aka the html/css files will be static
 
 // When the user goes to the basic website link serves up index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/loginScreen.html"))
 })
 
+// When the user goes to the messageScreen site serve up the messageScreen.html
 app.get('/messageScreen/', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/messageScreen.html"))
 })
 
-// Redirects the traffic over to these endpoints respectively. For messages goes through middleware then messageRoutes
-app.use('/auth', authRoutes)
-app.use('/messages', authMiddleware, messageRoutes)
+app.use('/auth', authRoutes) // When /auth is accessed use the authRoutes.js functions
+app.use('/messages', authMiddleware, messageRoutes) // When /messages is accessed go through authMiddleware.js then messageRoutes
 
 // Sets up socket.io connection and events
 io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
 
-    // Listen for a custom event from the client
-    socket.on('loadMessages', (msg) => {
+    socket.on('loadMessages', (msg) => { // socket.io event for telling users that a chat update has happened and to update chat
         console.log('Received message:', msg);
-        // Optionally broadcast to other clients
-        socket.broadcast.emit('loadMessages', msg);
+        socket.broadcast.emit('loadMessages', msg); // Broadcast to all other online users to reload chat
     });
 
-    // Handle client disconnect event
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
     });
 });
 
 // Sets the server up to start listening as setup is complete
-httpServer.listen(port, ()=>{
-    console.log(`Server has started on port: ${port}`)
+httpServer.listen(process.env.PORT, ()=>{
+    console.log(`Server has started on port: ${process.env.PORT}`)
 })
