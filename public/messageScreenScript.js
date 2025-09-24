@@ -143,6 +143,7 @@ function loadAllMessages() {
             const deleteButton = document.createElement('button')
 
             const editedElement = document.createElement('p')
+            const timeStampElement = document.createElement('p')
 
             const messageId = data.messages[i].id
 
@@ -151,6 +152,9 @@ function loadAllMessages() {
 
             messageElement.textContent = data.messages[i].text
             messageElement.className = "messageElement"
+
+            timeStampElement.textContent = moment.utc(data.messages[i].timestamp).local().format('MM/DD/YY, h:mm a')
+            timeStampElement.className = "editedElement"
             
             // Each Message Element has a unique message id which I will use with the document.getElementById
             messageElement.id = `message-${messageId}`
@@ -169,15 +173,20 @@ function loadAllMessages() {
             deleteButton.textContent = "Delete"
 
             newMessageDiv.appendChild(usernameElement)
+
             if (data.requestUserId == data.messages[i].user_id) {
                 newMessageDiv.appendChild(editButton)
                 newMessageDiv.appendChild(deleteButton)
             }
+
+            newMessageDiv.appendChild(timeStampElement)
+
             if (data.messages[i].edited) {
                 editedElement.textContent = "(Edited)"
                 editedElement.className = "editedElement"
                 newMessageDiv.appendChild(editedElement)
             }
+
             newMessageDiv.appendChild(messageElement)
 
             messageContainer.appendChild(newMessageDiv)

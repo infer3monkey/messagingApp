@@ -1,5 +1,6 @@
 import express from 'express'
 import pool from '../db.js'
+import moment from 'moment'
 
 const router = express.Router()
 
@@ -31,11 +32,12 @@ router.get('/all', async (req, res) => {
 router.post('/', async (req, res) => {
 
     const { text } = req.body;
+    const messageTimestamp = moment().format('MM/DD/YY, h:mm a');
 
     try {
         const result = await pool.query(
-            'INSERT INTO messages (user_id, text) VALUES ($1, $2) RETURNING id, text',
-            [req.userId, text]
+            'INSERT INTO messages (user_id, text, timestamp) VALUES ($1, $2, $3) RETURNING id, text',
+            [req.userId, text, messageTimestamp]
         );
 
         const insertedMessage = result.rows[0]; // This will have the id and text of the new row

@@ -2,6 +2,7 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import pool from '../db.js'
+import moment from 'moment'
 
 const router = express.Router()
 
@@ -31,9 +32,10 @@ router.post('/register', async (req, res) => {
         const userId = result.rows[0].id;
 
         // Add default welcome message
+        const messageTimestamp = moment().format('MM/DD/YY, h:mm a');
         const defaultMessage = `Hello, I am ${username}. I will be joining this chat room!`;
-        const insertMessageText = 'INSERT INTO messages (user_id, text) VALUES ($1, $2)';
-        const insertMessageValues = [userId, defaultMessage];
+        const insertMessageText = 'INSERT INTO messages (user_id, text, timestamp) VALUES ($1, $2, $3)';
+        const insertMessageValues = [userId, defaultMessage, messageTimestamp];
         await pool.query(insertMessageText, insertMessageValues);
 
         // Create JWT token for authentication -> give to client so they can use

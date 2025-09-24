@@ -18,7 +18,8 @@ async function setupTables() {
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
         text TEXT,
-        edited BOOLEAN DEFAULT FALSE
+        edited BOOLEAN DEFAULT FALSE,
+        timestamp TEXT
       );
     `);
 
