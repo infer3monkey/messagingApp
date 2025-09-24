@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
 
     try {
         await pool.query(
-            'UPDATE messages SET text = $1 WHERE id = $2',
+            'UPDATE messages SET text = $1, edited = true WHERE id = $2',
             [text, id]
         );
 

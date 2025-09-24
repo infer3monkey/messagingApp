@@ -17,7 +17,8 @@ async function setupTables() {
       CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
-        text TEXT
+        text TEXT,
+        edited BOOLEAN DEFAULT FALSE
       );
     `);
 

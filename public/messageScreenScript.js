@@ -84,6 +84,7 @@ function editMessage(messageId, messageDiv) {
             socket.emit('loadMessages', 'editedMessage')
             messageElement.replaceWith(newMessageElement)
         })
+        loadAllMessages() // Reload for yourself to gain the edited message feature
     }
 }
 
@@ -141,6 +142,8 @@ function loadAllMessages() {
             const editButton = document.createElement('button')
             const deleteButton = document.createElement('button')
 
+            const editedElement = document.createElement('p')
+
             const messageId = data.messages[i].id
 
             usernameElement.textContent = data.messages[i].username + ":"
@@ -148,6 +151,7 @@ function loadAllMessages() {
 
             messageElement.textContent = data.messages[i].text
             messageElement.className = "messageElement"
+            
             // Each Message Element has a unique message id which I will use with the document.getElementById
             messageElement.id = `message-${messageId}`
 
@@ -168,6 +172,11 @@ function loadAllMessages() {
             if (data.requestUserId == data.messages[i].user_id) {
                 newMessageDiv.appendChild(editButton)
                 newMessageDiv.appendChild(deleteButton)
+            }
+            if (data.messages[i].edited) {
+                editedElement.textContent = "(Edited)"
+                editedElement.className = "editedElement"
+                newMessageDiv.appendChild(editedElement)
             }
             newMessageDiv.appendChild(messageElement)
 
