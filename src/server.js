@@ -24,7 +24,7 @@ const __dirname = dirname(__filename) // Grab directory path
 
 app.use(express.json()) // App now expects json, allows it to interpret json
 app.use(express.urlencoded({ extended: true})) // Allows us to access the values from the request (think req.body)
-app.use(express.static(path.join(__dirname, "../public"))) // All Files from public aka the html/css files will be static
+app.use(express.static(path.join(__dirname, "../public"))) // All Files from public aka the html/css files will be static and served automatically
 
 // When the user goes to the basic website link serves up index.html
 app.get('/', (req, res) => {
