@@ -32,8 +32,8 @@ app.get('/', (req, res) => {
 })
 
 // When the user goes to the messageScreen site serve up the messageScreen.html
-app.get('/messageScreen/', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/html/messageScreen.html"))
+app.get('/globalChat/', (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/html/globalChat.html"))
 })
 
 app.use('/auth', authRoutes) // When /auth is accessed use the authRoutes.js functions

@@ -12,7 +12,7 @@ function checkIfValidToken() {
     .then(response => {
         if (response.status >= 200 && response.status < 300) {
             console.log("Token is Valid")
-            window.location.href = '/messageScreen/'
+            window.location.href = '/globalChat/'
         } else {
             console.log("Token Invalid")
         }
@@ -36,7 +36,7 @@ function loginUser() {
     .then(response => response.json())
     .then(data => {
         localStorage.setItem('token', data.token)
-        window.location.href = '/messageScreen/'
+        window.location.href = '/globalChat/'
     })
     .catch(error => {
         console.error('Error Registering User:', error)
@@ -58,7 +58,7 @@ function registerUser() {
     .then(data => {
         localStorage.setItem('token', data.token)
         // data is the token so save it into local storage, and log into the proper website
-        window.location.href = '/messageScreen/' //This sends a new get request at that endpoint, no fetch needed
+        window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
     })
     .catch(error => {
         console.error('Error Registering User:', error)
