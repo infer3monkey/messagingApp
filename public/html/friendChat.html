@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <script src="/socket.io/socket.io.js"></script>
+        <title>Fireplace</title>
+        <link rel="icon" href="/images/campfire.png" type="image/png">
+        
+        <link href="/css/friendChatStyle.css" rel="stylesheet">
+        <link href="/css/navBar.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navigationBar">
+            <img src="/images/campfire.png">
+            <h2>Fireplace</h2>
+            <button onclick="openGlobalChat()">Global Chat</button>
+            <button class="activeScreen">Friend Chat</button>
+            <button onclick="openAddFriends()">Add Friends</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <h1>Friend Chat</h1>
+        <h3>Coming Soon!</h3>
+
+        <script src="/js/friendChatScript.js"></script>
+
+    </body>
+</html>

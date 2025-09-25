@@ -13,6 +13,14 @@ function logout() {
     window.location.href = '/'
 }
 
+function openFriendChat() {
+    window.location.href = '/friendChat/'
+}
+
+function openAddFriends(){
+    window.location.href = '/addFriends'
+}
+
 function sendMessage(newMessageText) {
     fetch('/messages/', {
         method: 'POST',
