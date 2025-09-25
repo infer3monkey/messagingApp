@@ -28,12 +28,12 @@ app.use(express.static(path.join(__dirname, "../public"))) // All Files from pub
 
 // When the user goes to the basic website link serves up index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/loginScreen.html"))
+    res.sendFile(path.join(__dirname, "../public/html/loginScreen.html"))
 })
 
 // When the user goes to the messageScreen site serve up the messageScreen.html
 app.get('/messageScreen/', (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/messageScreen.html"))
+    res.sendFile(path.join(__dirname, "../public/html/messageScreen.html"))
 })
 
 app.use('/auth', authRoutes) // When /auth is accessed use the authRoutes.js functions
