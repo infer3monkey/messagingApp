@@ -7,25 +7,32 @@
         <link rel="icon" href="/images/campfire.png" type="image/png">
         
         <link href="/css/globalChatStyle.css" rel="stylesheet">
+        <link href="/css/navBar.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     </head>
     <body>
 
-        <button class="logoutButton" onclick="
-            logout()
-        ">Logout</button>
-
-        <div class="message-card">
-        <h1>Global Chat</h1>
-
-        <div id="messages">
-            Where the Messages Go
+        <!-- Navigation Bar -->
+        <div class="navigationBar">
+            <img src="/images/campfire.png">
+            <h2>Fireplace</h2>
+            <button class="activeScreen">Global Chat</button>
+            <button>Friend Chat</button>
+            <button>Add Friends</button>
+            <button onclick="logout()">Logout</button>
         </div>
 
-        <form id="messageForm">
-            <input type="text" id="newMessage" placeholder="New Message Here..." required />
-            <button type="submit">Send Message</button>
-        </form>
+        <div class="message-card">
+            <h1>Global Chat</h1>
+
+            <div id="messages">
+                Where the Messages Go
+            </div>
+
+            <form id="messageForm">
+                <input type="text" id="newMessage" placeholder="New Message Here..." required />
+                <button type="submit">Send Message</button>
+            </form>
         </div>
         
         <script src="/js/globalChatScript.js"></script>
