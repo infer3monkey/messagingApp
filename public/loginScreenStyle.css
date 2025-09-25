@@ -5,6 +5,7 @@ body {
     box-sizing: border-box;
     background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -84,4 +85,13 @@ body {
 .button-row button:hover {
     background: linear-gradient(180deg, rgb(252, 132, 3) , rgb(200, 0, 0));
     transform: translateY(-2px) scale(1.04);
+}
+
+img {
+    min-width: 240px;
+    max-width: 100%;
+    display: block;
+    min-height: 100px;
+    max-height: 20%;
+    margin-bottom: 30px;
 }
