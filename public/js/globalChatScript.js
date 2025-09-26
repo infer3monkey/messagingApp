@@ -130,8 +130,6 @@ function checkIfValidToken() {
 }
 
 function scrollToBottom(messageContainer){
-    // When First Loading the global chat, start the scroll bar at the bottom
-    console.log("bottom")
     messageContainer.scrollTop = messageContainer.scrollHeight
 }
 
@@ -233,5 +231,10 @@ document.getElementById("usernameTopRightElement").textContent = username
 
 // This will be run when a different client updated the chat with a new message/edit/delete
 socket.on('loadMessages', (msg) => {
-    loadAllMessages(false);
+    const messageContainer = document.getElementById('messages')
+    if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
+        loadAllMessages(true); // If Already at the bottom auto scroll for them
+    } else {
+        loadAllMessages(false); // If browsing other messages don't auto scroll
+    }
 });
