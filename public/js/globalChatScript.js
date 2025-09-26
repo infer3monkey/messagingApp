@@ -146,6 +146,8 @@ function loadAllMessages() {
             const newMessageDiv = document.createElement('div')
             newMessageDiv.className = "messageDivBorder"
 
+            const profilePictureElement = document.createElement('img')
+
             const messageElement = document.createElement('p')
             const usernameElement = document.createElement('p')
 
@@ -156,6 +158,9 @@ function loadAllMessages() {
             const timeStampElement = document.createElement('p')
 
             const messageId = data.messages[i].id
+
+            profilePictureElement.src = "/images/basicUserImage.png"
+            profilePictureElement.id = "profilePicture"
 
             usernameElement.textContent = data.messages[i].username + ":"
             usernameElement.className = "usernameElement"
@@ -182,12 +187,8 @@ function loadAllMessages() {
             deleteButton.className = "buttonElement"
             deleteButton.textContent = "Delete"
 
+            newMessageDiv.appendChild(profilePictureElement)
             newMessageDiv.appendChild(usernameElement)
-
-            if (data.requestUserId == data.messages[i].user_id) {
-                newMessageDiv.appendChild(editButton)
-                newMessageDiv.appendChild(deleteButton)
-            }
 
             newMessageDiv.appendChild(timeStampElement)
 
@@ -195,6 +196,11 @@ function loadAllMessages() {
                 editedElement.textContent = "(Edited)"
                 editedElement.className = "editedElement"
                 newMessageDiv.appendChild(editedElement)
+            }
+
+            if (data.requestUserId == data.messages[i].user_id) {
+                newMessageDiv.appendChild(editButton)
+                newMessageDiv.appendChild(deleteButton)
             }
 
             newMessageDiv.appendChild(messageElement)

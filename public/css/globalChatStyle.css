@@ -92,12 +92,12 @@ form button[type="submit"]:hover {
 
 .usernameElement {
     color: rgb(200, 100, 0);
-    display: inline;
+    display: inline-block;
 }
 
 .editedElement {
     color: rgb(200, 100, 0);
-    display: inline;
+    display: inline-block;
     margin-left: 8px;
 }
 
@@ -114,7 +114,7 @@ p.messageElement {
 
 input.messageElement {
     color: rgb(200, 0, 0);
-    display: block;
+    display:block;
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 16px;
@@ -151,4 +151,16 @@ input.messageElement:focus {
     margin-bottom: 5px;
     border-bottom: 1px solid rgb(200, 100, 0);
     box-sizing: border-box;
+}
+
+.messageDivBorder #profilePicture {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgb(200, 100, 0);
+    box-sizing: border-box;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: top;
+    margin-right: 5px;
 }

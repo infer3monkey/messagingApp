@@ -13,7 +13,7 @@
 .navigationBar img {
     width: auto;
     height: 80%;
-    margin-left: 15px;
+    margin-left: 6%;
     margin-right: 5px;
     display: inline-block;
     align-self: center;
@@ -48,8 +48,20 @@
     border-radius: 3px;
 }
 
+.navigationBar #profilePicture {
+    display: inline-block;
+    width: auto;
+    height: 90%;
+    margin-left: auto;
+    margin-right: 0px;
+    border: 2px solid black;
+    box-sizing: border-box;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .navigationBar h4 {
     display: inline-block;
-    margin-left: auto;
-    margin-right: 25px;
+    margin-left: 10px;
+    margin-right: 6%;
 }
