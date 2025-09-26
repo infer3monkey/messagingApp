@@ -5,6 +5,7 @@ import { createServer } from "http"; // http servers for socket.io
 import { Server } from "socket.io"; // socket.io
 import authRoutes from './routes/authRoutes.js' // Routes
 import messageRoutes from './routes/messageRoutes.js' // Routes
+import friendRoutes from './routes/friendRoutes.js' // Routes
 import authMiddleware from './middleware/authMiddleware.js' // Middleware
 import setupTables from './dbSetup.js'; // Setting function for postGres Database
 
@@ -46,6 +47,7 @@ app.get('/addFriends/', (req, res) => {
 
 app.use('/auth', authRoutes) // When /auth is accessed use the authRoutes.js functions
 app.use('/messages', authMiddleware, messageRoutes) // When /messages is accessed go through authMiddleware.js then messageRoutes
+app.use('/friends', authMiddleware, friendRoutes) // when /friends is accessed go through authMiddleware.js then friendRoutes
 
 // Sets up socket.io connection and events
 io.on('connection', (socket) => {

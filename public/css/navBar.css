@@ -1,13 +1,28 @@
 .navigationBar {
     width: 100%;
     height: 60px;
-    background-color: rgb(252, 132, 3);
+    background-image: linear-gradient(
+        to top,
+        rgb(252, 132, 3),
+        rgb(200, 0, 0),
+        rgb(252, 132, 3)
+    );
+    background-size: 100% 300%;
+    background-repeat: repeat-y;
     position: fixed;
     top: 0;
     right: 0;
     display: flex;
     align-items: left;
     justify-content: flex-start;
+    border: 3px solid black;
+    box-sizing: border-box;
+    animation: scrollBackground 5s linear infinite;
+}
+
+@keyframes scrollBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 300%; }
 }
 
 .navigationBar img {
@@ -33,13 +48,12 @@
     margin: 0 5px;
     display: inline-block;
     align-self: center;
-    background-color: rgb(252, 132, 3);
+    background-color: transparent;
     border: none;
     font-weight: bold;
 }
 
 .navigationBar button:hover {
-    background-color: rgb(220, 110, 3);
     transform: translateY(-2px) scale(1.04);
 }
 

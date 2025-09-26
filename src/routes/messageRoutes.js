@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const router = express.Router()
 
-// All of these endpoints require a valid token due to middleware
+// All of these endpoints require a valid token due to middleware, need to add channel checks soon as well
 
 // Get all messages from all users
 router.get('/all', async (req, res) => {
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-// Edit a message, needs the id of the user, has a dynamic id, need to change the completed stuff
+// Edit a message, needs the dyanmic id of the message
 router.put('/:id', async (req, res) => {
     const { text } = req.body;
     const { id } = req.params;
