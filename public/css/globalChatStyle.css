@@ -8,25 +8,19 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow-y: hidden;
 }
 
 .message-card {
     background: black;
-    border-radius: 18px;
-    box-shadow: 0 8px 32px 0 rgba(200, 0, 0, 0.9);
     padding: 15px 25px;
-    min-width: 320px;
-    max-width: 80vw;
-    width: 60vw;
+    width: 100vw;
     display: flex;
     flex-direction: column;
     gap: 18px;
-    margin-top: 100px;
-    margin-bottom: 30px;
-    max-height: calc(100vh - 200px);
-    height: calc(100vh - 200px);
-    flex-grow: 0;
-    flex-shrink: 0;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+    box-sizing: border-box;
 }
 
 .message-card h1 {
@@ -48,6 +42,8 @@ body {
     font-size: 1em;
     color: #333;
     flex-grow: 1;
+    border: 2px solid rgb(200, 100, 0);
+    box-sizing: border-box;
 }
 
 form {
