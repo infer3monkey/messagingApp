@@ -21,10 +21,21 @@
             <h4 id="usernameTopRightElement">username</h4>
         </div>
 
-        <h1>Adding Friends</h1>
-        <h3>Coming Soon!</h3>
+        <form id="addFriendForm">
+            <input type="text" id="newAddFriend" placeholder="Type Username Here..." required />
+            <button type="submit">Add Friend</button>
+        </form>
 
-        <script src="/js/addFriendsScript.js"></script>
+        <div class="friendListsContainer">
+            <div class="friendsList">
+                <h2>Friends List</h2>
+            </div>
+            <div class="pendingFriendsList">
+                <h2>Pending Friends List</h2>
+            </div>
+        </div>
+    
+        <script src="/js/addFriendsScript.js"></script>  
 
     </body>
 </html>
