@@ -37,7 +37,7 @@ function sendMessage(newMessageText) {
     .then(response => response.json())
     .then(data => {
         socket.emit('loadMessages', 'sentMessage')
-        loadAllMessages()
+        loadAllMessages(true)
     })
     .catch(error => {
         console.error('Error Sending Message:', error)
@@ -88,10 +88,10 @@ function editMessage(messageId, messageDiv) {
         .then(response => response.json())
         .then(data => {
             socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
-            loadAllMessages() // Reload for yourself
+            loadAllMessages(false) // Reload for yourself
         }).catch(error =>{
             console.log('Error Editing Message', error)
-            loadAllMessages()
+            loadAllMessages(false)
         })
         
     }
@@ -129,7 +129,13 @@ function checkIfValidToken() {
     })
 }
 
-function loadAllMessages() {
+function scrollToBottom(messageContainer){
+    // When First Loading the global chat, start the scroll bar at the bottom
+    console.log("bottom")
+    messageContainer.scrollTop = messageContainer.scrollHeight
+}
+
+function loadAllMessages(scrollBottom) {
     let allMessages = ''
     fetch('/messages/all/', {
         method: 'GET',
@@ -206,6 +212,11 @@ function loadAllMessages() {
             newMessageDiv.appendChild(messageElement)
 
             messageContainer.appendChild(newMessageDiv)
+
+            if (scrollBottom) {
+                // Automatically scroll to bottom on first load
+                scrollToBottom(messageContainer)
+            }
         }
     })
     .catch(error => {
@@ -215,11 +226,12 @@ function loadAllMessages() {
 }
 
 checkIfValidToken()
-loadAllMessages()
+loadAllMessages(true)
 
 document.getElementById("usernameTopRightElement").textContent = username
 
+
 // This will be run when a different client updated the chat with a new message/edit/delete
 socket.on('loadMessages', (msg) => {
-    loadAllMessages();
+    loadAllMessages(false);
 });
