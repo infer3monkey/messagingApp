@@ -1,4 +1,5 @@
 const token = localStorage.getItem('token') || null
+const username = localStorage.getItem('username') || ""
 
 // Handling Socket Connection
 const socket = io();
@@ -11,6 +12,7 @@ function logout() {
     localStorage.setItem('token', null)
     console.log("logged out")
     window.location.href = '/'
+    localStorage.removeItem('username')
 }
 
 function openFriendChat() {
@@ -69,12 +71,8 @@ function editMessage(messageId, messageDiv) {
         newMessageElement.id = `message-${messageId}`
         messageElement.replaceWith(newMessageElement)
     } else if (messageElement.tagName === "INPUT") {
-        // Turn the input element into a paragraph
-        const newMessageElement = document.createElement('p')
+        // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-        newMessageElement.textContent = messageContent
-        newMessageElement.className = "messageElement"
-        newMessageElement.id = `message-${messageId}`
 
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
@@ -89,10 +87,13 @@ function editMessage(messageId, messageDiv) {
         })
         .then(response => response.json())
         .then(data => {
-            socket.emit('loadMessages', 'editedMessage')
-            messageElement.replaceWith(newMessageElement)
+            socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
+            loadAllMessages() // Reload for yourself
+        }).catch(error =>{
+            console.log('Error Editing Message', error)
+            loadAllMessages()
         })
-        loadAllMessages() // Reload for yourself to gain the edited message feature
+        
     }
 }
 
@@ -143,6 +144,7 @@ function loadAllMessages() {
         for (i=0; i < data.messages.length; i++){
 
             const newMessageDiv = document.createElement('div')
+            newMessageDiv.className = "messageDivBorder"
 
             const messageElement = document.createElement('p')
             const usernameElement = document.createElement('p')
@@ -208,6 +210,8 @@ function loadAllMessages() {
 
 checkIfValidToken()
 loadAllMessages()
+
+document.getElementById("usernameTopRightElement").textContent = username
 
 // This will be run when a different client updated the chat with a new message/edit/delete
 socket.on('loadMessages', (msg) => {

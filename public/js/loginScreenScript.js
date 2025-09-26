@@ -1,4 +1,5 @@
 const token = localStorage.getItem('token') || null
+const username = localStorage.getItem('username') || ""
 
 // Check if the user already has a valid token, if they do then log them in and give them the message screen
 function checkIfValidToken() {
@@ -37,6 +38,7 @@ function loginUser() {
     .then(data => {
         localStorage.setItem('token', data.token)
         window.location.href = '/globalChat/'
+        localStorage.setItem('username', document.getElementById('username').value)
     })
     .catch(error => {
         console.error('Error Registering User:', error)
@@ -59,6 +61,7 @@ function registerUser() {
         localStorage.setItem('token', data.token)
         // data is the token so save it into local storage, and log into the proper website
         window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
+        localStorage.setItem('username', document.getElementById('username').value)
     })
     .catch(error => {
         console.error('Error Registering User:', error)

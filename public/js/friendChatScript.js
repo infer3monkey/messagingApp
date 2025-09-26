@@ -1,4 +1,5 @@
 const token = localStorage.getItem('token') || null
+const username = localStorage.getItem('username') || ""
 
 function logout() {
     localStorage.setItem('token', null)
@@ -38,3 +39,4 @@ function checkIfValidToken() {
 }
 
 checkIfValidToken()
+document.getElementById("usernameTopRightElement").textContent = username

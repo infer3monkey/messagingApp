@@ -14,6 +14,7 @@ router.get('/all', async (req, res) => {
             SELECT messages.*, users.username 
             FROM messages 
             JOIN users ON users.id = messages.user_id
+            ORDER BY messages.id ASC
         `);
         
         const messages = result.rows; // this is an array of all joined message rows
