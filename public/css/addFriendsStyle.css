@@ -110,12 +110,13 @@ form button[type="submit"]:hover {
     color: black;
     border: 3px solid rgba(200, 0, 0, 0.9);
     border-radius: 6px;
-    font-size: 1.05em;
+    font-size: clamp(12px, 1.5vw, 18px);
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, transform 0.2s;
     vertical-align: middle;
     margin-right: 5px;
+    text-align: center;
 }
 
 .pendingFriendDiv button:hover {
@@ -126,14 +127,45 @@ form button[type="submit"]:hover {
 .pendingFriendDiv p {
     display: inline-block;
     vertical-align: middle;
-    width: 60%;          /* fixed width for uniform size */
-    max-width: 60%;      /* ensures no growth */
+    width: 60%;
+    max-width: 60%;
     height: 100%;
     margin-left: 10px;
-    margin-right: auto;   /* adjust as needed */
+    margin-right: auto;
     text-align: left;
-    font-size: large;    /* fixed font size */
-    white-space: nowrap; /* prevents wrapping */
-    overflow: hidden;    /* clips overflow */
-    text-overflow: ellipsis; /* adds "..." for clipped text */
+    font-size: large;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.refreshButton{
+    padding: 10px 28px;
+    background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    color: black;
+    border: 3px solid rgba(200, 0, 0, 0.9);
+    border-radius: 6px;
+    font-size: clamp(12px, 1.5vw, 18px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
+    width: 10vw;
+    height: 40px;
+    vertical-align: middle;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.refreshButton:hover {
+    background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    transform: translateY(-2px) scale(1.04);
+}
+
+.inlineDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

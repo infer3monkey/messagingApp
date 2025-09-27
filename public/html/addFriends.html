@@ -10,6 +10,7 @@
         <link href="/css/navBar.css" rel="stylesheet">
     </head>
     <body>
+
         <div class="navigationBar">
             <img src="/images/campfire.png">
             <h2>Fireplace</h2>
@@ -21,10 +22,19 @@
             <h4 id="usernameTopRightElement">username</h4>
         </div>
 
-        <form id="addFriendForm">
-            <input type="text" id="newAddFriend" placeholder="Type Username Here..." required />
-            <button type="submit">Add Friend</button>
-        </form>
+        <div class="inlineDiv">
+            <form id="addFriendForm">
+                <input type="text" id="newAddFriend" placeholder="Type Username Here..." required />
+                <button type="submit">Add Friend</button>
+            </form>
+
+            <button class="refreshButton" onclick="
+                loadPendingFriendRequests() 
+                loadActiveFriends()
+            ">Refresh</button>
+        </div>
+
+        
 
         <div class="friendListsContainer">
             <div class="friendsList" id="friendsList">
