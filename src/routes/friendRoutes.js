@@ -26,6 +26,7 @@ router.post('/createRequest', async (req, res) => {
         }
 
         if (friendId.rows[0].id == req.userId) {
+            // Trying to Add Themselves as a Friend
             res.sendStatus(404);
             return;
         }
@@ -74,6 +75,63 @@ router.get('/getPending', async (req, res) => {
         `, [req.userId]);
 
         res.json(incomingFriendReqs.rows);
+
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
+
+// Accept a Pending Friend Request, Edit the Accepted value to true
+router.put('/acceptFriend', async (req, res) => {
+
+    const { friendName } = req.body;
+
+    try {
+        const friendId = await pool.query(
+            `SELECT id FROM users WHERE username = $1`,
+            [friendName]
+        );
+
+        if (friendId.rows.length === 0) {
+            // Friend not found
+            res.sendStatus(404);
+            return;
+        }
+
+        await pool.query(
+            'UPDATE friends SET accepted = TRUE WHERE user_id = $1 AND friend_user_id = $2',
+            [friendId.rows[0].id, req.userId]
+        );
+
+        res.json({ message: "Friend Request Accepted"})
+
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    } 
+
+})
+
+// Remove friend connection from the friends database, can be for a decline request or a removal of a friend
+router.delete('/deleteFriend', async (req, res) => {
+
+})
+
+// Get all active friends, similar to getting pending requests, bidirectional, accepted = true
+router.get('/getFriends', async (req, res) => {
+    try {
+        const allFriends = await pool.query(`
+            SELECT friends.*, users.username
+            FROM friends
+            JOIN users ON 
+            (friends.user_id = users.id AND friends.friend_user_id = $1)
+            OR 
+            (friends.friend_user_id = users.id AND friends.user_id = $1)
+            WHERE accepted = TRUE;
+        `, [req.userId]);
+
+        res.json(allFriends.rows);
 
     } catch(err) {
         console.log(err);

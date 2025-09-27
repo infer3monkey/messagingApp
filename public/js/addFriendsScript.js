@@ -49,7 +49,11 @@ function loadPendingFriendRequests() {
     .then(response => response.json())
     .then(data => {
         const pendingFriendsListContainer = document.getElementById('pendingFriendsList')
-        for (i=0;i<data.length;i++){
+        const header = document.createElement('h2')
+        header.textContent = "Pending Friends List"
+        pendingFriendsListContainer.innerHTML = ''
+        pendingFriendsListContainer.appendChild(header)
+        for (let i=0;i<data.length;i++){
             const newPendingFriendDiv = document.createElement('div')
             newPendingFriendDiv.className = "pendingFriendDiv"
             const friendNameElement = document.createElement('p')
@@ -60,17 +64,81 @@ function loadPendingFriendRequests() {
             acceptButton.textContent = 'Accept'
             declineButton.textContent = "Decline"
 
+            acceptButton.onclick = function() {
+                acceptFriendRequest(data[i].username)
+            }
+
             newPendingFriendDiv.appendChild(friendNameElement)
             newPendingFriendDiv.appendChild(acceptButton)
             newPendingFriendDiv.appendChild(declineButton)
 
             pendingFriendsListContainer.appendChild(newPendingFriendDiv)
-
         }
     })
     .catch(error => {
         console.error('Error Fetching Pending Friend Requests', error)
     })
+}
+
+function loadActiveFriends() {
+    fetch('/friends/getFriends/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const friendsListContainer = document.getElementById('friendsList')
+        const header = document.createElement('h2')
+        header.textContent = "Friends List"
+        friendsListContainer.innerHTML = ''
+        friendsListContainer.appendChild(header)
+        for (let i=0;i<data.length;i++){
+            const newFriendDiv = document.createElement('div')
+            newFriendDiv.className = "pendingFriendDiv"
+            const friendNameElement = document.createElement('p')
+            const removeButton = document.createElement('button')
+
+            friendNameElement.textContent = data[i].username
+            removeButton.textContent = 'Remove'
+
+            newFriendDiv.appendChild(friendNameElement)
+            newFriendDiv.appendChild(removeButton)
+
+            friendsListContainer.appendChild(newFriendDiv)
+        }
+    })
+    .catch(error => {
+        console.error('Error Fetching Pending Friend Requests', error)
+    })
+}
+
+function acceptFriendRequest(friendName) {
+    fetch('/friends/acceptFriend/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        body: JSON.stringify({
+            'friendName': friendName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(`Accepted ${friendName}'s Friend Request`)
+        loadActiveFriends()
+        loadPendingFriendRequests()
+    })
+    .catch(error => {
+        console.error('Error Accepting Friend Request', error)
+    })
+}
+
+function deleteFriendRequest() {
+    // Implement Here
 }
 
 function sendFriendRequest(friendName) {
@@ -106,3 +174,4 @@ document.getElementById('addFriendForm').addEventListener('submit', function(e) 
 checkIfValidToken()
 document.getElementById("usernameTopRightElement").textContent = username
 loadPendingFriendRequests()
+loadActiveFriends()

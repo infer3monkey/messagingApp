@@ -134,7 +134,6 @@ function scrollToBottom(messageContainer){
 }
 
 function loadAllMessages(scrollBottom) {
-    let allMessages = ''
     fetch('/messages/all/', {
         method: 'GET',
         headers: {
