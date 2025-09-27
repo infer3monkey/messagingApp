@@ -144,7 +144,7 @@ function loadAllMessages(scrollBottom) {
     .then(data => {
         const messageContainer = document.getElementById('messages')
         messageContainer.innerHTML = ''
-        for (i=0; i < data.messages.length; i++){
+        for (let i=0; i < data.messages.length; i++){
 
             const newMessageDiv = document.createElement('div')
             newMessageDiv.className = "messageDivBorder"

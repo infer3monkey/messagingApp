@@ -115,7 +115,31 @@ router.put('/acceptFriend', async (req, res) => {
 
 // Remove friend connection from the friends database, can be for a decline request or a removal of a friend
 router.delete('/deleteFriend', async (req, res) => {
+    const { friendName } = req.body;
 
+    try {
+        const friendId = await pool.query(
+            `SELECT id FROM users WHERE username = $1`,
+            [friendName]
+        );
+
+        if (friendId.rows.length === 0) {
+            // Friend not found
+            res.sendStatus(404);
+            return;
+        }
+
+        await pool.query(
+            'DELETE FROM friends WHERE (user_id = $1 AND friend_user_id = $2) OR (user_id = $2 AND friend_user_id = $1)',
+            [friendId.rows[0].id, req.userId]
+        );
+
+        res.json({ message: "Friend Removed"})
+
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    } 
 })
 
 // Get all active friends, similar to getting pending requests, bidirectional, accepted = true

@@ -68,6 +68,10 @@ function loadPendingFriendRequests() {
                 acceptFriendRequest(data[i].username)
             }
 
+            declineButton.onclick = function() {
+                deleteFriendRequest(data[i].username)
+            }
+
             newPendingFriendDiv.appendChild(friendNameElement)
             newPendingFriendDiv.appendChild(acceptButton)
             newPendingFriendDiv.appendChild(declineButton)
@@ -104,6 +108,10 @@ function loadActiveFriends() {
             friendNameElement.textContent = data[i].username
             removeButton.textContent = 'Remove'
 
+            removeButton.onclick = function() {
+                deleteFriendRequest(data[i].username)
+            }
+
             newFriendDiv.appendChild(friendNameElement)
             newFriendDiv.appendChild(removeButton)
 
@@ -128,7 +136,7 @@ function acceptFriendRequest(friendName) {
     })
     .then(response => response.json())
     .then(data => {
-        alert(`Accepted ${friendName}'s Friend Request`)
+        //alert(`Accepted ${friendName}'s Friend Request`)
         loadActiveFriends()
         loadPendingFriendRequests()
     })
@@ -137,8 +145,26 @@ function acceptFriendRequest(friendName) {
     })
 }
 
-function deleteFriendRequest() {
-    // Implement Here
+function deleteFriendRequest(friendName) {
+    fetch('/friends/deleteFriend/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        body: JSON.stringify({
+            'friendName': friendName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        //alert(`Deleted Friend ${friendName}`)
+        loadActiveFriends()
+        loadPendingFriendRequests()
+    })
+    .catch(error => {
+        console.error('Error Deleting Friend', error)
+    })
 }
 
 function sendFriendRequest(friendName) {
