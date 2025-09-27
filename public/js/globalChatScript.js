@@ -228,7 +228,6 @@ loadAllMessages(true)
 
 document.getElementById("usernameTopRightElement").textContent = username
 
-
 // This will be run when a different client updated the chat with a new message/edit/delete
 socket.on('loadMessages', (msg) => {
     const messageContainer = document.getElementById('messages')

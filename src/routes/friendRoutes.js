@@ -5,6 +5,7 @@ import moment from 'moment'
 const router = express.Router()
 
 // All of these endpoints require a valid token due to middleware
+// All addresses here are /friends/...
 
 // Create a new Friend Request
 router.post('/createRequest', async (req, res) => {
@@ -13,24 +14,49 @@ router.post('/createRequest', async (req, res) => {
 
     try {
         // Find Friend_ID from friendName, if empty then friend does not exist, return and let client know
-
-        // Check if this request or connection already exists
-
-        // Create a new channel corresponding to this friendship
-
-        // Create the new friendship with pending value
-
-
-
-        /* Example Code
-        const result = await pool.query(
-            'INSERT INTO messages (user_id, text, timestamp) VALUES ($1, $2, $3) RETURNING id, text',
-            [req.userId, text, messageTimestamp]
+        const friendId = await pool.query(
+            `SELECT id FROM users WHERE username = $1`,
+            [friendName]
         );
 
-        const insertedMessage = result.rows[0]; // This will have the id and text of the new row
+        if (friendId.rows.length === 0) {
+            // Friend not found
+            res.sendStatus(404);
+            return;
+        }
 
-        res.json({ id: insertedMessage.id, text: insertedMessage.text });*/
+        if (friendId.rows[0].id == req.userId) {
+            res.sendStatus(404);
+            return;
+        }
+
+        // Check if this request or connection already exists
+        const checkFriendConnection = await pool.query(
+            `SELECT user_id, friend_user_id FROM friends 
+             WHERE (user_id = $1 AND friend_user_id = $2)
+             OR (user_id = $2 AND friend_user_id = $1)`,
+            [req.userId, friendId.rows[0].id]
+        );
+
+        if (checkFriendConnection.rows.length != 0) {
+            // Friend Request already exists
+            res.sendStatus(409);
+            return;
+        }
+
+        // Create a new channel corresponding to this friendship
+        const createFriendChannel = await pool.query(
+            `INSERT INTO channels VALUES (DEFAULT) RETURNING id`
+        );
+
+        // Create the new friendship with pending value
+        const createFriendship = await pool.query(
+            `INSERT INTO friends (user_id, friend_user_id, channel_id) VALUES ($1, $2, $3)`,
+            [req.userId, friendId.rows[0].id, createFriendChannel.rows[0].id]
+        );
+
+        res.json({ message: "friendship request sent" })
+
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
@@ -38,5 +64,21 @@ router.post('/createRequest', async (req, res) => {
 })
 
 // Get all pending friend requests
+router.get('/getPending', async (req, res) => {
+    try {
+        const incomingFriendReqs = await pool.query(`
+            SELECT friends.*, users.username 
+            FROM friends
+            JOIN users ON friends.user_id = users.id
+            WHERE friend_user_id = $1 AND accepted = FALSE
+        `, [req.userId]);
+
+        res.json(incomingFriendReqs.rows);
+
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
 
 export default router

@@ -47,12 +47,13 @@ async function setupTables() {
     await pool.query('CREATE INDEX IF NOT EXISTS idx_friends_user_id ON friends(user_id)');
     await pool.query('CREATE INDEX IF NOT EXISTS idx_friends_friend_user_id ON friends(friend_user_id)');
     await pool.query('CREATE INDEX IF NOT EXISTS idx_friends_channel_id ON friends(channel_id)');
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_messages_user_id ON messages(user_id)')
 
     // Inserting Global Chat on Creation, if it doesn't exist at id 1
     await pool.query(`
       INSERT INTO channels (id)
-      SELECT 1
-      WHERE NOT EXISTS (SELECT 1 FROM channels WHERE id = 1);
+      SELECT nextval(pg_get_serial_sequence('channels', 'id'))
+      WHERE NOT EXISTS (SELECT 1 FROM channels WHERE id = 1)
     `);
 
     console.log('Tables created!');

@@ -38,34 +38,5 @@ function checkIfValidToken() {
     })
 }
 
-function sendFriendRequest(friendName) {
-    fetch('/friends/createRequest', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-        body: JSON.stringify({
-            'friendName': friendName
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success')
-    })
-    .catch(error => {
-        console.error('Error Sending Message:', error)
-    })
-}
-
-document.getElementById('addFriendForm').addEventListener('submit', function(e) {
-    e.preventDefault() // Prevents Page Reload
-    const friendName = document.getElementById('newAddFriend').value.trim() //.trim() removes whitespace from beggining and end
-    if (friendName) {
-        sendFriendRequest(friendName)
-        document.getElementById('newAddFriend').value = ""
-    }
-})
-
 checkIfValidToken()
 document.getElementById("usernameTopRightElement").textContent = username

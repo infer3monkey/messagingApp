@@ -92,3 +92,48 @@ form button[type="submit"]:hover {
     background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
     transform: translateY(-2px) scale(1.04);
 }
+
+.pendingFriendDiv {
+    display: flex;
+    width: 100%;
+    height: 9%;
+    padding: 10px 20;
+    justify-content: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.pendingFriendDiv button {
+    display: inline-block;
+    padding: 5px 15px;
+    background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    color: black;
+    border: 3px solid rgba(200, 0, 0, 0.9);
+    border-radius: 6px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.pendingFriendDiv button:hover {
+    background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    transform: translateY(-2px) scale(1.04);
+}
+
+.pendingFriendDiv p {
+    display: inline-block;
+    vertical-align: middle;
+    width: 60%;          /* fixed width for uniform size */
+    max-width: 60%;      /* ensures no growth */
+    height: 100%;
+    margin-left: 10px;
+    margin-right: auto;   /* adjust as needed */
+    text-align: left;
+    font-size: large;    /* fixed font size */
+    white-space: nowrap; /* prevents wrapping */
+    overflow: hidden;    /* clips overflow */
+    text-overflow: ellipsis; /* adds "..." for clipped text */
+}
