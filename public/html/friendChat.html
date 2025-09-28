@@ -8,6 +8,7 @@
         
         <link href="/css/friendChatStyle.css" rel="stylesheet">
         <link href="/css/navBar.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     </head>
     <body>
         <div class="navigationBar">
@@ -24,13 +25,13 @@
             
         <div  class="overallDiv">
             <div class="dmSelectorDiv">
-                <p id="titleText">Friend Chats</p>
+                <p class="titleText">Friend Chats</p>
                 <div id="friendChatsSelectorDiv"></div>
             </div>
 
             <div class="activeChatDiv">
-                <p id="titleText">Friend's Username Chat</p>
-                <div class="messages"></div>
+                <p class="titleText" id="friendUsernameText">Friend's Username Chat</p>
+                <div class="messages" id="messages"></div>
                 <form id="messageForm">
                     <input type="text" id="newMessage" placeholder="New Message Here..." required />
                     <button type="submit">Send Message</button>

@@ -9,7 +9,7 @@ function authMiddleware (req, res, next) {
         return res.status(401).json({message: "No Token Provided"})
     }
 
-    console.log(token)
+    //console.log(token)
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {

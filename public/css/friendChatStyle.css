@@ -66,7 +66,7 @@ body {
     box-sizing: border-box;
 }
 
-#titleText {
+.titleText {
     font-size: clamp(14px, 3vw, 20px);
     font-weight: 700;
     color: rgb(200, 100, 0);
@@ -122,4 +122,97 @@ form button[type="submit"] {
 form button[type="submit"]:hover {
     background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
     transform: translateY(-2px) scale(1.04);
+}
+
+.friendChatSelectorButton {
+    background: rgba(40, 40, 40, 0.35);
+    width: 100%;
+    height: 10%;
+    text-align: left;
+    justify-content: center;
+    color: rgb(200, 100, 0);
+    border: none;
+    box-sizing: border-box;
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.friendChatSelectorButton:hover {
+    background: rgb(40, 40, 40);
+    transform: translateY(-2px) scale(1.04);
+}
+
+.usernameElement {
+    color: rgb(200, 100, 0);
+    display: inline-block;
+}
+
+.editedElement {
+    color: rgb(200, 100, 0);
+    display: inline-block;
+    margin-left: 8px;
+}
+
+p.messageElement {
+    color: rgb(200, 100, 0);
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    padding: 8px 12px;
+    line-height: 1.4;
+    width: 100%;
+}
+
+input.messageElement {
+    color: rgb(200, 0, 0);
+    display:block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    padding: 8px 12px;
+    line-height: 1.4;
+    background: rgba(46, 45, 45, 1);
+    width: 100%;
+}
+
+input.messageElement:focus {
+    border-color: rgb(200, 0, 0);
+    box-shadow: 0 0 16px rgb(200, 0, 0);
+}
+
+.buttonElement {
+    background: linear-gradient(0deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    color: black;
+    border: 3px solid rgba(200, 0, 0, 0.9);
+    border-radius: 6px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 3px 10px rgb(57 173 219 / 8%);
+    margin-left: 10px;
+}
+
+.buttonElement:hover {
+    background: linear-gradient(90deg, rgb(252, 132, 3) , rgb(200, 0, 0));
+    transform: translateY(-2px) scale(1.04);
+}
+
+.messageDivBorder {
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgb(200, 100, 0);
+    box-sizing: border-box;
+}
+
+.messageDivBorder #profilePicture {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgb(200, 100, 0);
+    box-sizing: border-box;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: top;
+    margin-right: 5px;
 }

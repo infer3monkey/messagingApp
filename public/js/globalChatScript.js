@@ -31,7 +31,8 @@ function sendMessage(newMessageText) {
             'Authorization': token
         },
         body: JSON.stringify({
-            'text': newMessageText
+            'text': newMessageText,
+            'channel_id': 1
         })
     })
     .then(response => response.json())
@@ -45,7 +46,7 @@ function sendMessage(newMessageText) {
 }
 
 function deleteMessage(messageId, messageDiv) {
-    fetch(`/messages/${messageId}`, {
+    fetch(`/messages/${messageId}/1`, {
         method: 'DELETE',
         headers: {
             'Authorization': token
@@ -82,7 +83,8 @@ function editMessage(messageId, messageDiv) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'text': messageContent
+                'text': messageContent,
+                'channel_id': 1
             })
         })
         .then(response => response.json())
@@ -134,7 +136,7 @@ function scrollToBottom(messageContainer){
 }
 
 function loadAllMessages(scrollBottom) {
-    fetch('/messages/all/', {
+    fetch('/messages/all/1', {
         method: 'GET',
         headers: {
             'Authorization': token
