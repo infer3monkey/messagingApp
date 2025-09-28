@@ -19,10 +19,24 @@
             <button onclick="logout()">Logout</button>
             <img src="/images/basicUserImage.png" id="profilePicture">
             <h4 id="usernameTopRightElement">username</h4>
-        </div>
 
-        <h1>Friend Chat</h1>
-        <h3>Coming Soon!</h3>
+        </div>
+            
+        <div  class="overallDiv">
+            <div class="dmSelectorDiv">
+                <p id="titleText">Friend Chats</p>
+                <div id="friendChatsSelectorDiv"></div>
+            </div>
+
+            <div class="activeChatDiv">
+                <p id="titleText">Friend's Username Chat</p>
+                <div class="messages"></div>
+                <form id="messageForm">
+                    <input type="text" id="newMessage" placeholder="New Message Here..." required />
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
 
         <script src="/js/friendChatScript.js"></script>
 
