@@ -31,12 +31,12 @@ router.post('/register', async (req, res) => {
 
         const userId = result.rows[0].id;
 
-        // Add default welcome message
+        /* Add default welcome message
         const messageTimestamp = moment().format('MM/DD/YY, h:mm a');
         const defaultMessage = `Hello, I am ${username}. I will be joining Fireplace!`;
         const insertMessageText = 'INSERT INTO messages (user_id, text, timestamp) VALUES ($1, $2, $3)';
         const insertMessageValues = [userId, defaultMessage, messageTimestamp];
-        await pool.query(insertMessageText, insertMessageValues);
+        await pool.query(insertMessageText, insertMessageValues);*/
 
         // Create JWT token for authentication -> give to client so they can use
         const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
