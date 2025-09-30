@@ -46,9 +46,6 @@ function switchActiveChat(channelId, friendName) {
     activeChat = channelId
     let friendUsernameElement = document.getElementById("friendUsernameText")
     friendUsernameElement.textContent = `Chat With ${friendName}`
-    // Logic
-
-
     loadAllMessages(true) // Loading Messages After Switching Active Chat
 }
 

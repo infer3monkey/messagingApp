@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
 
     socket.on('loadMessages', (msg) => { // socket.io event for telling users that a chat update has happened and to update chat
-        console.log('Received message:', msg);
+        //console.log('Received message:', msg);
         socket.broadcast.emit('loadMessages', msg); // Broadcast to all other online users to reload chat
     });
 

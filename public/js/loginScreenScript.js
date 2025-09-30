@@ -35,10 +35,10 @@ function loginUser() {
         })
     })
     .then(response => response.json())
-    .then(data => {
+    .then(async data => {
         localStorage.setItem('token', data.token)
-        window.location.href = '/globalChat/'
         localStorage.setItem('username', document.getElementById('username').value)
+        window.location.href = '/globalChat/'
     })
     .catch(error => {
         console.error('Error Registering User:', error)
@@ -60,8 +60,8 @@ function registerUser() {
     .then(data => {
         localStorage.setItem('token', data.token)
         // data is the token so save it into local storage, and log into the proper website
-        window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
         localStorage.setItem('username', document.getElementById('username').value)
+        window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
     })
     .catch(error => {
         console.error('Error Registering User:', error)

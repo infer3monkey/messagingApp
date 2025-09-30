@@ -1,5 +1,8 @@
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
+// Super Secret Key, only so plain text isn't stored in the database
+// Global Messages anyways, so should be seen as unsafe
+const secretKey = `FireplaceSimpleEncryptionKey`
 
 // Handling Socket Connection
 const socket = io();
@@ -24,6 +27,7 @@ function openAddFriends(){
 }
 
 function sendMessage(newMessageText) {
+    const encryptedMessageText = CryptoJS.AES.encrypt(newMessageText, secretKey).toString()
     fetch('/messages/', {
         method: 'POST',
         headers: {
@@ -31,7 +35,7 @@ function sendMessage(newMessageText) {
             'Authorization': token
         },
         body: JSON.stringify({
-            'text': newMessageText,
+            'text': encryptedMessageText,
             'channel_id': 1
         })
     })
@@ -74,7 +78,7 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-
+        const encryptedMessageContent = CryptoJS.AES.encrypt(messageContent, secretKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
             method: 'PUT',
@@ -83,7 +87,7 @@ function editMessage(messageId, messageDiv) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'text': messageContent,
+                'text': encryptedMessageContent,
                 'channel_id': 1
             })
         })
@@ -170,7 +174,7 @@ function loadAllMessages(scrollBottom) {
             usernameElement.textContent = data.messages[i].username + ":"
             usernameElement.className = "usernameElement"
 
-            messageElement.textContent = data.messages[i].text
+            messageElement.textContent = CryptoJS.AES.decrypt(data.messages[i].text, secretKey).toString(CryptoJS.enc.Utf8) // Decrypting
             messageElement.className = "messageElement"
 
             timeStampElement.textContent = moment.utc(data.messages[i].timestamp).local().format('MM/DD/YY, h:mm a')
