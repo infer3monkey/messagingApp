@@ -2,7 +2,6 @@ const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
 const privateKey = localStorage.getItem(`${username}privateKey`) || null
 let symmetricKey = null
-let iv = ""
 const encryptor = new JSEncrypt()
 const decryptor = new JSEncrypt()
 decryptor.setPrivateKey(privateKey)
@@ -49,8 +48,22 @@ function checkIfValidToken() {
     })
 }
 
+function getRandomChar() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    return chars.charAt(randomIndex);
+}
+
+function createNewSymmetricKey(keyLength) {
+    let key = ""
+    for(let i = 0; i < keyLength; i++) {
+        key += getRandomChar()
+    }
+    return key
+}
+
 function switchActiveChat(channelId, friendName) {
-    publicKey = localStorage.getItem(`${friendName}publicKeyFriendChat`) || null
+    publicKey = localStorage.getItem(`${friendName}${channelId}publicKeyFriendChat`) || null
     if (!publicKey) {
         fetch(`/friends/obtainPublicKey/${friendName}`, {
             method: 'GET',
@@ -61,13 +74,13 @@ function switchActiveChat(channelId, friendName) {
         })
         .then(response => response.json())
         .then(data => {
-            localStorage.setItem(`${friendName}publicKey`, data.publicKey)
+            localStorage.setItem(`${friendName}${channelId}publicKeyFriendChat`, data.publicKey)
             publicKey = data.publicKey
             activeChat = channelId
             let friendUsernameElement = document.getElementById("friendUsernameText")
             friendUsernameElement.textContent = `Chat With ${friendName}`
             encryptor.setPublicKey(publicKey)
-            symmetricKey = `${channelId}${username}${friendName}`
+            symmetricKey = createNewSymmetricKey(12)
             localStorage.setItem(`${channelId}${username}symmetricKey`, symmetricKey)
             loadAllMessages(true) // Loading Messages After Switching Active Chat
         })
