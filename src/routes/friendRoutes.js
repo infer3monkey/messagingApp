@@ -163,4 +163,18 @@ router.get('/getFriends', async (req, res) => {
     }
 })
 
+router.get('/obtainPublicKey/:friendName', async (req, res) => {
+    const { friendName } = req.params;
+    try {
+        const publicKey = await pool.query (`SELECT public_key FROM users WHERE username = $1`, [friendName]);
+        if (publicKey.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json({ publicKey: publicKey.rows[0].public_key});
+    } catch(err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
+
 export default router

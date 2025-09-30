@@ -7,6 +7,7 @@ async function setupTables() {
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE,
+        public_key TEXT UNIQUE DEFAULT '',
         password TEXT
       );
     `);
@@ -27,7 +28,8 @@ async function setupTables() {
         user_id INTEGER REFERENCES users(id),
         text TEXT,
         edited BOOLEAN DEFAULT FALSE,
-        timestamp TEXT
+        timestamp TEXT,
+        encrypted_symmetric_key TEXT DEFAULT ''
       );
     `);
 

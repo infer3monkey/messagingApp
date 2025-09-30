@@ -1,5 +1,12 @@
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
+const privateKey = localStorage.getItem(`${username}privateKey`) || null
+let symmetricKey = null
+let iv = ""
+const encryptor = new JSEncrypt()
+const decryptor = new JSEncrypt()
+decryptor.setPrivateKey(privateKey)
+let publicKey
 let activeChat = null
 
 // Handling Socket Connection
@@ -43,10 +50,38 @@ function checkIfValidToken() {
 }
 
 function switchActiveChat(channelId, friendName) {
-    activeChat = channelId
-    let friendUsernameElement = document.getElementById("friendUsernameText")
-    friendUsernameElement.textContent = `Chat With ${friendName}`
-    loadAllMessages(true) // Loading Messages After Switching Active Chat
+    publicKey = localStorage.getItem(`${friendName}publicKeyFriendChat`) || null
+    if (!publicKey) {
+        fetch(`/friends/obtainPublicKey/${friendName}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem(`${friendName}publicKey`, data.publicKey)
+            publicKey = data.publicKey
+            activeChat = channelId
+            let friendUsernameElement = document.getElementById("friendUsernameText")
+            friendUsernameElement.textContent = `Chat With ${friendName}`
+            encryptor.setPublicKey(publicKey)
+            symmetricKey = `${channelId}${username}${friendName}`
+            localStorage.setItem(`${channelId}${username}symmetricKey`, symmetricKey)
+            loadAllMessages(true) // Loading Messages After Switching Active Chat
+        })
+        .catch(error => {
+            console.error('Error Fetching Friends Public Key', error)
+        })
+    } else {
+        activeChat = channelId
+        let friendUsernameElement = document.getElementById("friendUsernameText")
+        friendUsernameElement.textContent = `Chat With ${friendName}`
+        encryptor.setPublicKey(publicKey)
+        symmetricKey = localStorage.getItem(`${channelId}${username}symmetricKey`) || null
+        loadAllMessages(true) // Loading Messages After Switching Active Chat
+    }
 }
 
 function loadActiveFriends() {
@@ -84,6 +119,10 @@ function loadActiveFriends() {
 }
 
 function sendMessage(newMessageText) {
+    
+    const encryptedMessageText = CryptoJS.AES.encrypt(newMessageText, symmetricKey).toString()
+    const encryptedSymmetricKey = encryptor.encrypt(symmetricKey);
+    //console.log("Encrypted Message: ", encryptedMessageText, "\nEncrypted Key: ", encryptedSymmetricKey)
     fetch('/messages/', {
         method: 'POST',
         headers: {
@@ -91,8 +130,9 @@ function sendMessage(newMessageText) {
             'Authorization': token
         },
         body: JSON.stringify({
-            'text': newMessageText,
-            'channel_id': activeChat
+            'text': encryptedMessageText,
+            'channel_id': activeChat,
+            'encryptedKey': encryptedSymmetricKey
         })
     })
     .then(response => response.json())
@@ -153,7 +193,17 @@ function loadAllMessages(scrollBottom) {
             usernameElement.textContent = data.messages[i].username + ":"
             usernameElement.className = "usernameElement"
 
-            messageElement.textContent = data.messages[i].text
+            // Handle Decryption
+            if (data.requestUserId == data.messages[i].user_id) {
+                // Our Own Message
+                messageElement.textContent = CryptoJS.AES.decrypt(data.messages[i].text, symmetricKey).toString(CryptoJS.enc.Utf8)
+            } else {
+                // Their Message
+                const decryptedSymmetricKey = decryptor.decrypt(data.messages[i].encrypted_symmetric_key);
+                messageElement.textContent = CryptoJS.AES.decrypt(data.messages[i].text, decryptedSymmetricKey).toString(CryptoJS.enc.Utf8)
+            }
+            
+            
             messageElement.className = "messageElement"
 
             timeStampElement.textContent = moment.utc(data.messages[i].timestamp).local().format('MM/DD/YY, h:mm a')
@@ -235,7 +285,7 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-
+        const encryptedMessageContent = CryptoJS.AES.encrypt(messageContent, symmetricKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
             method: 'PUT',
@@ -244,8 +294,8 @@ function editMessage(messageId, messageDiv) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'text': messageContent,
-                'channel_id': activeChat
+                'text': encryptedMessageContent,
+                'channel_id': activeChat,
             })
         })
         .then(response => response.json())

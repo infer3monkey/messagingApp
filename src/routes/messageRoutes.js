@@ -76,15 +76,26 @@ router.post('/', async (req, res) => {
             }
         } 
 
-        const result = await pool.query(
-            'INSERT INTO messages (user_id, text, timestamp, channel_id) VALUES ($1, $2, $3, $4) RETURNING id, text',
-            [req.userId, filteredText, messageTimestamp, channel_id]
-        );
-
-        const insertedMessage = result.rows[0]; // This will have the id and text of the new row
-
-        res.json({ id: insertedMessage.id, text: insertedMessage.text });
-        
+        if (channel_id != 1) {
+            const { encryptedKey } = req.body;
+            const result = await pool.query(
+                'INSERT INTO messages (user_id, text, timestamp, channel_id, encrypted_symmetric_key) VALUES ($1, $2, $3, $4, $5) RETURNING id, text',
+                [req.userId, filteredText, messageTimestamp, channel_id, encryptedKey]
+            );
+    
+            const insertedMessage = result.rows[0]; // This will have the id and text of the new row
+    
+            res.json({ id: insertedMessage.id, text: insertedMessage.text });
+        } else {
+            const result = await pool.query(
+                'INSERT INTO messages (user_id, text, timestamp, channel_id) VALUES ($1, $2, $3, $4) RETURNING id, text',
+                [req.userId, filteredText, messageTimestamp, channel_id]
+            );
+    
+            const insertedMessage = result.rows[0]; // This will have the id and text of the new row
+    
+            res.json({ id: insertedMessage.id, text: insertedMessage.text });
+        }
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

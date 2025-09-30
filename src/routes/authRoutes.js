@@ -10,7 +10,7 @@ const router = express.Router()
 
 // Register a new user endpoint POST /auth/register
 router.post('/register', async (req, res) => {
-    const {username, password} = req.body //Gives Access to the JSON
+    const {username, password, publicKey} = req.body //Gives Access to the JSON
 
     // Adding constraints for the username and password such as character requirement and such
     if (username.length < 2 || password.length < 4) {
@@ -78,6 +78,20 @@ router.post('/login', async (req, res) => {
         res.json({ token });
 
     } catch (err) {
+        console.error(err.message);
+        res.sendStatus(503);
+    }
+})
+
+router.post('/publicKey', async (req, res) => {
+    const { publicKey, username } = req.body;
+
+    try {
+        const addPublicKey = await pool.query('UPDATE users SET public_key = $1 WHERE username = $2', [publicKey, username]);
+
+        res.json({ message: "Added Public Key" })
+        
+    } catch (err){
         console.error(err.message);
         res.sendStatus(503);
     }
