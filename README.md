@@ -1,15 +1,15 @@
 # What is Fireplace?  
 A Fullstack Messaging App Inspired by Discord
 
-<img src="/readmeImgs/globalchatImage.png" width="400" height="800">
-<img src="/readmeImgs/addfriendImage.png" width="400" height="800">
-<img src="/readmeImgs/friendchatImage.png" width="400" height="800">
-
 ## Main Features
 - User Register/Login Using 1 Way Password Encryption and Web Tokens for Identification
+<img src="/readmeImgs/userloginImage.png" width="400" height="800">
 - Global Chat with Message Timestamps, an Unchangeable Profile Picture, and the Ability to Send/Edit/Delete Messages Using Api Endpoints
+<img src="/readmeImgs/globalchatImage.png" width="400" height="800">
 - Sending Friend Requests, Accepting/Declining Pending Friend Requests, Removing Already Established Friends
+<img src="/readmeImgs/addfriendImage.png" width="400" height="800">
 - Sending Messages to All Friends With End to End Encryption, Same Features as the Global Chat
+<img src="/readmeImgs/friendchatImage.png" width="400" height="800">
 - Messages are all sent in real time using web sockets, no need to refresh the page
 
 ## Tech Stack + Reasoning
@@ -25,6 +25,30 @@ A Fullstack Messaging App Inspired by Discord
 - **JSencrypt**: provides assymetric key encryption, used to encrypt/decrupt a symmetric key for E2E friend chat encryption
 - **moment**: makes timestamps easy to obtain, place in the database, and convert to the clients time when needed
 - **bad-words**: used to filter words in messages to keep the chat with some level of decency
+
+## System Design
+<img src="/readmeImgs/fireplaceSystemDesign.png" width="400" height="800">
+
+#### Client
+- **Socket Connection**: used to implement real time communication within the global and friend chat. This establishes a socket connection when loading friend chat or global chat and stays connected until they leave the page. There is only one event which is called when the messages table has been updated and tells other connected clients to refresh their chat
+- **Login Page**: this page connects to the Auth Routes where it can send a http request to register or login. It also handles storing the token on server response and creating the public and private key on registration
+- **Global Chat**: this page connects to Message Routes and is able to create/edit/delete/read messages through the http requests it sends out to the server. It uses a symmetric key stored in plain js to encrypt/decrypt messages so the database doesn't store plaintext
+- **Friend Chat**: similar to the global chat however it also accesses the friend routes to see who the user is friends with and add their chat to the list. It also has the added responsibility of creating a symmetric key the first time they dm someone new and sending that encrypted with an asymmetric key to the server so the recipient can decode the messages
+- **Add Friends**: this page connects to friend routes. Where it allows the user through http requests to send friend requests, accept/decline pending friend requests, and remove already existing friends
+**Note**: every page past the login page uses the JWT token for every endpoint to ensure validity
+
+#### Server
+- **Socket Connection**: used to implement real time communication within the global and friend chat. After establishing a connection when the server receive an event for messages being updated, it tells all clients to reload their chats.
+- **Auth Middleware**: used to validate the token passed in every http request header once past the login page. friend and message routes are first taken to this middleware. Also adds userId to the request then passes it on to the proper endpoint.
+- **Friend Routes**: communicates with the client and database in order to add/edit/delete/read friend requests as needed by the users. Uses the friends table and creates a new channel for the dm when creating a new friend entry
+- **Message Routes**: communicates with the client and database in order to add/edit/delete/read messages as needed by the users. uses the message table primarily which makes reference to the users and channels table. 
+- **Auth Routes**: communicates with the client and database in order to register or login a user as needed. Interacts with the users table and makes everything else possible. Also handles the creation and distribution of the JWT keys
+
+#### Database
+- **Users Table**: stores id, username, public_key, and a encrypted password. Groups together all database user data 
+- **Messages Table**: stores id, channel_id(channels), user_id(users), text, edited, timestamp, and encrypted_symmetric_key. This structure allows for fast crud operations on messages
+- **Friends Table**: stores id, user_id(users), friend_user_id(users), channel_id(channels), accepted. user_id is always the user who sent the request. A channel must also be made for every friend request, even if it stays pending.
+- **Channels Table**: stores id. A very simple table as there is no extra information needed from a channel.
 
 ## How To Run Yourself
 I have created a docker compose file for easy setup and teardown with no downloads needed  
