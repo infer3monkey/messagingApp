@@ -27,7 +27,7 @@ A Fullstack Messaging App Inspired by Discord
 - **bad-words**: used to filter words in messages to keep the chat with some level of decency
 
 ## System Design
-<img src="/readmeImgs/fireplaceSystemDesign.png" width="400" height="800">
+<img src="/readmeImgs/fireplaceSystemDesign.png" width="700" height="1400">
 
 #### Client
 - **Socket Connection**: used to implement real time communication within the global and friend chat. This establishes a socket connection when loading friend chat or global chat and stays connected until they leave the page. There is only one event which is called when the messages table has been updated and tells other connected clients to refresh their chat
