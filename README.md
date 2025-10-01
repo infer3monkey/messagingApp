@@ -34,7 +34,7 @@ A Fullstack Messaging App Inspired by Discord
 - **Login Page**: this page connects to the Auth Routes where it can send a http request to register or login. It also handles storing the token on server response and creating the public and private key on registration
 - **Global Chat**: this page connects to Message Routes and is able to create/edit/delete/read messages through the http requests it sends out to the server. It uses a symmetric key stored in plain js to encrypt/decrypt messages so the database doesn't store plaintext
 - **Friend Chat**: similar to the global chat however it also accesses the friend routes to see who the user is friends with and add their chat to the list. It also has the added responsibility of creating a symmetric key the first time they dm someone new and sending that encrypted with an asymmetric key to the server so the recipient can decode the messages
-- **Add Friends**: this page connects to friend routes. Where it allows the user through http requests to send friend requests, accept/decline pending friend requests, and remove already existing friends
+- **Add Friends**: this page connects to friend routes. Where it allows the user through http requests to send friend requests, accept/decline pending friend requests, and remove already existing friends  
 **Note**: every page past the login page uses the JWT token for every endpoint to ensure validity
 
 #### Server
