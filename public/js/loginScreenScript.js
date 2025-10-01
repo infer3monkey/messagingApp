@@ -1,5 +1,9 @@
 const token = localStorage.getItem('token') || null
 let username = localStorage.getItem('username') || ""
+// Create the keys when loading the site to save time
+const crypt = new JSEncrypt();
+const publicKey = crypt.getPublicKey()
+const privateKey = crypt.getPrivateKey()
 
 // Check if the user already has a valid token, if they do then log them in and give them the message screen
 function checkIfValidToken() {
@@ -54,7 +58,8 @@ function registerUser() {
         },
         body: JSON.stringify({
             'username': document.getElementById('username').value,
-            'password': document.getElementById('password').value
+            'password': document.getElementById('password').value,
+            'publicKey': publicKey
         })
     })
     .then(response => response.json())
@@ -62,29 +67,10 @@ function registerUser() {
         localStorage.setItem('token', data.token)
         // data is the token so save it into local storage, and log into the proper website
         username = document.getElementById('username').value
-        const crypt = new JSEncrypt();
-        const publicKey = crypt.getPublicKey()
-        const privateKey = crypt.getPrivateKey()
         localStorage.setItem(`${username}publicKey`, publicKey)
         localStorage.setItem(`${username}privateKey`, privateKey)
         localStorage.setItem('username', username)
-        fetch('/auth/publicKey/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'username': username,
-                'publicKey': publicKey
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
-        })
-        .catch(error => {
-            console.error('Error Posting Public Key')
-        })
+        window.location.href = '/globalChat/' //This sends a new get request at that endpoint, no fetch needed
     })
     .catch(error => {
         console.error('Error Registering User:', error)

@@ -25,8 +25,8 @@ router.post('/register', async (req, res) => {
     try {
 
         // Add the user to the database
-        const insertUserText = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id';
-        const insertUserValues = [username, hashedPassword];
+        const insertUserText = 'INSERT INTO users (username, password, public_key) VALUES ($1, $2, $3) RETURNING id';
+        const insertUserValues = [username, hashedPassword, publicKey];
         const result = await pool.query(insertUserText, insertUserValues);
 
         const userId = result.rows[0].id;
