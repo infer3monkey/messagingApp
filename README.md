@@ -42,7 +42,8 @@ A Fullstack Messaging App Inspired by Discord
 - **Auth Middleware**: used to validate the token passed in every http request header once past the login page. friend and message routes are first taken to this middleware. Also adds userId to the request then passes it on to the proper endpoint.
 - **Friend Routes**: communicates with the client and database in order to add/edit/delete/read friend requests as needed by the users. Uses the friends table and creates a new channel for the dm when creating a new friend entry
 - **Message Routes**: communicates with the client and database in order to add/edit/delete/read messages as needed by the users. uses the message table primarily which makes reference to the users and channels table. 
-- **Auth Routes**: communicates with the client and database in order to register or login a user as needed. Interacts with the users table and makes everything else possible. Also handles the creation and distribution of the JWT keys
+- **Auth Routes**: communicates with the client and database in order to register or login a user as needed. Interacts with the users table and makes everything else possible. Also handles the creation and distribution of the JWT keys  
+**Note**: every route checks if the user has access to that information. For example a user trying to send a message in a dm he is not part of, in addition to the middleware token check.
 
 #### Database
 - **Users Table**: stores id, username, public_key, and a encrypted password. Groups together all database user data 
