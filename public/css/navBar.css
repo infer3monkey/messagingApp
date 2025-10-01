@@ -52,6 +52,7 @@
     background-color: transparent;
     border: none;
     font-weight: bold;
+    color: black;
 }
 
 .navigationBar button:hover {

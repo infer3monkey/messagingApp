@@ -3,3 +3,4 @@ node_modules
 README.md
 .gitignore
 message_app.rest
+fireplace-ec2.pem

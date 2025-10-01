@@ -1,2 +1,3 @@
 .env
 message_app.rest
+fireplace-ec2.pem
