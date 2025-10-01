@@ -1,9 +1,9 @@
 # What is Fireplace?  
 A Fullstack Messaging App Inspired by Discord
 
-<img src="/readmeImgs/globalchatImage.png" width="100" height="200">
-<img src="/readmeImgs/addfriendImage.png" width="100" height="200">
-<img src="/readmeImgs/friendchatImage.png" width="100" height="200">
+<img src="/readmeImgs/globalchatImage.png" width="400" height="800">
+<img src="/readmeImgs/addfriendImage.png" width="400" height="800">
+<img src="/readmeImgs/friendchatImage.png" width="400" height="800">
 
 ## Main Features
 - User Register/Login Using 1 Way Password Encryption and Web Tokens for Identification
