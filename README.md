@@ -1,6 +1,8 @@
 # What is Fireplace?  
 A Fullstack Messaging App Inspired by Discord
 
+<img src="/readmeImgs" width="100" height="200">
+
 ## Main Features
 - User Register/Login Using 1 Way Password Encryption and Web Tokens for Identification
 - Global Chat with Message Timestamps, an Unchangeable Profile Picture, and the Ability to Send/Edit/Delete Messages Using Api Endpoints
@@ -23,7 +25,7 @@ A Fullstack Messaging App Inspired by Discord
 - **bad-words**: used to filter words in messages to keep the chat with some level of decency
 
 ## How To Run Yourself
-I have composed a docker compose file for easy setup and teardown with no downloads needed  
+I have created a docker compose file for easy setup and teardown with no downloads needed  
 
 `docker compose build`  
 `docker compose up -d`  
