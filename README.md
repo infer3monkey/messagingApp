@@ -1,12 +1,12 @@
 # What is Fireplace?  
 A Fullstack Messaging App Inspired by Discord
-[Live Website Link](https://fireplacefriends-73a3bef8a303.herokuapp.com/)
 
 ## Main Features
 - User Register/Login Using 1 Way Password Encryption and Web Tokens for Identification
 - Global Chat with Message Timestamps, an Unchangeable Profile Picture, and the Ability to Send/Edit/Delete Messages Using Api Endpoints
 - Sending Friend Requests, Accepting/Declining Pending Friend Requests, Removing Already Established Friends
 - Sending Messages to All Friends With End to End Encryption, Same Features as the Global Chat
+- Messages are all sent in real time using web sockets, no need to refresh the page
 
 ## Tech Stack + Reasoning
 - **html/css/javascript**: to learn the fundamentals of front end development
@@ -24,7 +24,6 @@ A Fullstack Messaging App Inspired by Discord
 
 ## How To Run Yourself
 I have composed a docker compose file for easy setup and teardown with no downloads needed  
-I recommend just using the live website link at the top though if you want to see the project  
 
 `docker compose build`  
 `docker compose up -d`  
@@ -51,4 +50,4 @@ Finally I was satisfied with the application and was ready to deploy it. I resea
 ## Struggles
 Given I was not very familiar with html/css/javascript there was a big learning process for all of these things throughout the project, especially at the beggining. At first I didn't even know how to make proper requests from the client to the server and then handle those requests when a response is given. The html wasn't too complicated but the css took me more time to tweak than I would like to admit.  
 
-I spent quite a few hours looking at the libsignal protocol to try to implement a true industry standard E2E encryption protocol. However things were not clicking and I ended up deciding on my simpler approach that provides solid security for an app of this scale. I also spent another plethora of hours trying to deploy my website and luckily ended up finding a video that got me about 80% of the way there and had to push through the last bit. Sadly the online environment and the localhost environment are slightly different so I had to fix some of these things (mainly how I handle user registration)
+I spent quite a few hours looking at the libsignal protocol to try to implement a true industry standard E2E encryption protocol. However things were not clicking and I ended up deciding on my simpler approach that provides solid security for an app of this scale. One issue with my solution is multiple devices or different browsers are not accounted for so the user won't be able to read those messages. I also spent another plethora of hours trying to deploy my website and luckily ended up finding a video that got me about 80% of the way there and had to push through the last bit. Sadly the online environment and the localhost environment are slightly different so I had to fix some of these things (mainly how I handle user registration)
