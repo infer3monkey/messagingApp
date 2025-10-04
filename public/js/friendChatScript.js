@@ -65,7 +65,7 @@ function createNewSymmetricKey(keyLength) {
 function switchActiveChat(channelId, friendName) {
     publicKey = localStorage.getItem(`${friendName}${channelId}publicKeyFriendChat`) || null
     if (!publicKey) {
-        fetch(`/friends/obtainPublicKey/${friendName}`, {
+        fetch(`/friends/publicKey/${friendName}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function switchActiveChat(channelId, friendName) {
 }
 
 function loadActiveFriends() {
-    fetch('/friends/getFriends/', {
+    fetch('/friends/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

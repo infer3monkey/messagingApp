@@ -39,7 +39,7 @@ function checkIfValidToken() {
 }
 
 function loadPendingFriendRequests() {
-    fetch('/friends/getPending/', {
+    fetch('/friends/pending/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ function loadPendingFriendRequests() {
 }
 
 function loadActiveFriends() {
-    fetch('/friends/getFriends/', {
+    fetch('/friends/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ function loadActiveFriends() {
 }
 
 function acceptFriendRequest(friendName) {
-    fetch('/friends/acceptFriend/', {
+    fetch('/friends/', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ function acceptFriendRequest(friendName) {
 }
 
 function deleteFriendRequest(friendName) {
-    fetch('/friends/deleteFriend/', {
+    fetch('/friends/', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ function deleteFriendRequest(friendName) {
 }
 
 function sendFriendRequest(friendName) {
-    fetch('/friends/createRequest/', {
+    fetch('/friends/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

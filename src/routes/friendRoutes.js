@@ -8,7 +8,7 @@ const router = express.Router()
 // All addresses here are /friends/...
 
 // Create a new Friend Request
-router.post('/createRequest', async (req, res) => {
+router.post('/', async (req, res) => {
 
     const { friendName } = req.body;
 
@@ -65,7 +65,7 @@ router.post('/createRequest', async (req, res) => {
 })
 
 // Get all pending friend requests
-router.get('/getPending', async (req, res) => {
+router.get('/pending', async (req, res) => {
     try {
         const incomingFriendReqs = await pool.query(`
             SELECT friends.*, users.username 
@@ -83,7 +83,7 @@ router.get('/getPending', async (req, res) => {
 })
 
 // Accept a Pending Friend Request, Edit the Accepted value to true
-router.put('/acceptFriend', async (req, res) => {
+router.put('/', async (req, res) => {
 
     const { friendName } = req.body;
 
@@ -114,7 +114,7 @@ router.put('/acceptFriend', async (req, res) => {
 })
 
 // Remove friend connection from the friends database, can be for a decline request or a removal of a friend
-router.delete('/deleteFriend', async (req, res) => {
+router.delete('/', async (req, res) => {
     const { friendName } = req.body;
 
     try {
@@ -143,7 +143,7 @@ router.delete('/deleteFriend', async (req, res) => {
 })
 
 // Get all active friends, similar to getting pending requests, bidirectional, accepted = true
-router.get('/getFriends', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const allFriends = await pool.query(`
             SELECT friends.*, users.username
@@ -163,7 +163,7 @@ router.get('/getFriends', async (req, res) => {
     }
 })
 
-router.get('/obtainPublicKey/:friendName', async (req, res) => {
+router.get('/publicKey/:friendName', async (req, res) => {
     const { friendName } = req.params;
     try {
         const publicKey = await pool.query (`SELECT public_key FROM users WHERE username = $1`, [friendName]);
