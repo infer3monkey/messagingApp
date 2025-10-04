@@ -45,11 +45,18 @@ function loginUser() {
         window.location.href = '/globalChat/'
     })
     .catch(error => {
-        console.error('Error Registering User:', error)
+        console.error('Error Logging in User:', error)
     })
 }
 
 function registerUser() {
+    // Check if username contains profanity before sending to server
+    const badUsername = containsProfanity(document.getElementById('username').value)
+    if (badUsername) {
+        alert('Username Contains Profanity, Choose a New Username')
+        return
+    }
+
     // Setting Up Asymmetric Keys if Needed for User
     fetch('/auth/register/', {
         method: 'POST',
