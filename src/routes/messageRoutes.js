@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const router = express.Router();
 
-// All of these endpoints require a valid token due to middleware, need to add channel checks soon as well
+// All of these endpoints require a valid token due to middleware
 
 async function checkChannelPermission(channel_id, userId){
     const validFriendshipCheck = await pool.query(`
@@ -21,7 +21,7 @@ async function checkChannelPermission(channel_id, userId){
     return true;
 }
 
-// Get all messages for global chat
+// Get all messages for a specified channel
 router.get('/all/:id', async (req, res) => {
 
     const { id } = req.params;

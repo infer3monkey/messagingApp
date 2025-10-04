@@ -33,15 +33,15 @@ app.get('/', (req, res) => {
 })
 
 // When the user sends get req to globalChat site serve up the messageScreen.html
-app.get('/globalChat/', (req, res) => {
+app.get('/globalChat', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/html/globalChat.html"))
 })
 
-app.get('/friendChat/', (req, res) => {
+app.get('/friendChat', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/html/friendChat.html"))
 })
 
-app.get('/addFriends/', (req, res) => {
+app.get('/addFriends', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/html/addFriends.html"))
 })
 

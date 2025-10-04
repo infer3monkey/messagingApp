@@ -11,21 +11,6 @@ socket.on('connect', () => {
     console.log('Connected with ID:', socket.id);
 });
 
-function logout() {
-    localStorage.setItem('token', null)
-    console.log("logged out")
-    window.location.href = '/'
-    localStorage.removeItem('username')
-}
-
-function openFriendChat() {
-    window.location.href = '/friendChat/'
-}
-
-function openAddFriends(){
-    window.location.href = '/addFriends'
-}
-
 function sendMessage(newMessageText) {
     const cleanText = checkProfanity(newMessageText)
     const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
@@ -113,33 +98,6 @@ document.getElementById('messageForm').addEventListener('submit', function(e) {
         document.getElementById('newMessage').value = ""
     }
 })
-
-function checkIfValidToken() {
-    fetch('/messages/verifyToken/', {
-        method: 'GET',
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-            console.log("Token is Valid")
-            
-        } else {
-            console.log("Token Invalid")
-            window.location.href = '/'
-        }
-    })
-    .catch(error => {
-        console.error('Error Validating Token:', error)
-        window.location.href = '/'
-    })
-}
-
-function scrollToBottom(messageContainer){
-    messageContainer.scrollTop = messageContainer.scrollHeight
-}
 
 function loadAllMessages(scrollBottom) {
     fetch('/messages/all/1', {
