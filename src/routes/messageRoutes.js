@@ -22,13 +22,13 @@ async function checkChannelPermission(channel_id, userId){
 }
 
 // Get all messages for a specified channel
-router.get('/all/:id', async (req, res) => {
+router.get('/all/:channel_id', async (req, res) => {
 
-    const { id } = req.params;
+    const { channel_id } = req.params;
 
     try {
-        if (id != 1) {
-            const allowed = await checkChannelPermission(id, req.userId);
+        if (channel_id != 1) {
+            const allowed = await checkChannelPermission(channel_id, req.userId);
             if (!allowed) {
                 res.sendStatus(404);
                 return;
@@ -41,7 +41,7 @@ router.get('/all/:id', async (req, res) => {
             JOIN users ON users.id = messages.user_id
             WHERE messages.channel_id = $1
             ORDER BY messages.id ASC`,
-            [id]
+            [channel_id]
         );
             
         const messages = result.rows; // this is an array of all joined message rows
@@ -50,6 +50,40 @@ router.get('/all/:id', async (req, res) => {
             requestUserId: req.userId,
             messages: messages
         });
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+})
+
+// Get a singular message given user has permission
+router.get('/:id/:channel_id', async (req, res) => {
+    const { id, channel_id } = req.params;
+
+    try {
+        if (channel_id != 1) {
+            const allowed = await checkChannelPermission(channel_id, req.userId);
+            if (!allowed) {
+                res.sendStatus(404);
+                return;
+            }
+        } 
+
+        const result = await pool.query(`
+            SELECT messages.*, users.username 
+            FROM messages 
+            JOIN users ON users.id = messages.user_id
+            WHERE messages.channel_id = $1 AND messages.id = $2`,
+            [channel_id, id]
+        );
+
+        const message = result.rows[0];
+
+        res.json({
+            requestUserId: req.userId,
+            message: message
+        });
+        
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
