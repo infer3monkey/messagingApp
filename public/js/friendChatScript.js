@@ -132,8 +132,8 @@ function loadActiveFriends() {
 }
 
 function sendMessage(newMessageText) {
-    
-    const encryptedMessageText = CryptoJS.AES.encrypt(newMessageText, symmetricKey).toString()
+    const cleanText = checkProfanity(newMessageText)
+    const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, symmetricKey).toString()
     const encryptedSymmetricKey = encryptor.encrypt(symmetricKey);
     //console.log("Encrypted Message: ", encryptedMessageText, "\nEncrypted Key: ", encryptedSymmetricKey)
     fetch('/messages/', {
@@ -298,7 +298,8 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-        const encryptedMessageContent = CryptoJS.AES.encrypt(messageContent, symmetricKey).toString()
+        const cleanText = checkProfanity(messageContent)
+        const encryptedMessageContent = CryptoJS.AES.encrypt(cleanText, symmetricKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
             method: 'PUT',

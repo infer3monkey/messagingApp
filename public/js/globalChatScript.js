@@ -27,7 +27,8 @@ function openAddFriends(){
 }
 
 function sendMessage(newMessageText) {
-    const encryptedMessageText = CryptoJS.AES.encrypt(newMessageText, secretKey).toString()
+    const cleanText = checkProfanity(newMessageText)
+    const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
     fetch('/messages/', {
         method: 'POST',
         headers: {
@@ -78,7 +79,8 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-        const encryptedMessageContent = CryptoJS.AES.encrypt(messageContent, secretKey).toString()
+        const cleanText = checkProfanity(messageContent)
+        const encryptedMessageContent = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
             method: 'PUT',

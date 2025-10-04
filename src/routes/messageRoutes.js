@@ -1,11 +1,8 @@
 import express from 'express'
 import pool from '../db.js'
 import moment from 'moment'
-import * as badwords from 'bad-words'
 
-const { Filter } = badwords;
 const router = express.Router();
-const filter = new Filter();
 
 // All of these endpoints require a valid token due to middleware, need to add channel checks soon as well
 
@@ -65,8 +62,6 @@ router.post('/', async (req, res) => {
     const { text, channel_id } = req.body;
     const messageTimestamp = moment().format('MM/DD/YY, h:mm a');
 
-    const filteredText = filter.clean(text);
-
     try {
         if (channel_id != 1) {
             const allowed = await checkChannelPermission(channel_id, req.userId);
@@ -80,7 +75,7 @@ router.post('/', async (req, res) => {
             const { encryptedKey } = req.body;
             const result = await pool.query(
                 'INSERT INTO messages (user_id, text, timestamp, channel_id, encrypted_symmetric_key) VALUES ($1, $2, $3, $4, $5) RETURNING id, text',
-                [req.userId, filteredText, messageTimestamp, channel_id, encryptedKey]
+                [req.userId, text, messageTimestamp, channel_id, encryptedKey]
             );
     
             const insertedMessage = result.rows[0]; // This will have the id and text of the new row
@@ -89,7 +84,7 @@ router.post('/', async (req, res) => {
         } else {
             const result = await pool.query(
                 'INSERT INTO messages (user_id, text, timestamp, channel_id) VALUES ($1, $2, $3, $4) RETURNING id, text',
-                [req.userId, filteredText, messageTimestamp, channel_id]
+                [req.userId, text, messageTimestamp, channel_id]
             );
     
             const insertedMessage = result.rows[0]; // This will have the id and text of the new row
@@ -107,8 +102,6 @@ router.put('/:id', async (req, res) => {
     const { text, channel_id } = req.body;
     const { id } = req.params;
 
-    const filteredText = filter.clean(text);
-
     try {
         if (channel_id != 1) {
             const allowed = await checkChannelPermission(channel_id, req.userId);
@@ -120,7 +113,7 @@ router.put('/:id', async (req, res) => {
 
         await pool.query(
             'UPDATE messages SET text = $1, edited = true WHERE id = $2 AND user_id = $3 AND channel_id = $4',
-            [filteredText, id, req.userId, channel_id]
+            [text, id, req.userId, channel_id]
         );
 
         res.json({ message: "Message Changed" });

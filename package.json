@@ -13,7 +13,6 @@
   "license": "ISC",
   "description": "A messaging application designed to teach me the basics of fullstack web dev, uses node/express, sqlite, jwt, and bcrypt. Hopefully expand with docker",
   "dependencies": {
-    "bad-words": "^4.0.0",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
