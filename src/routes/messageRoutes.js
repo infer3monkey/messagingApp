@@ -81,7 +81,7 @@ router.get('/:id/:channel_id', async (req, res) => {
 
         res.json({
             requestUserId: req.userId,
-            message: message
+            messages: message
         });
         
     } catch (err) {
@@ -150,7 +150,7 @@ router.put('/:id', async (req, res) => {
             [text, id, req.userId, channel_id]
         );
 
-        res.json({ message: "Message Changed" });
+        res.json({ message: "Message Changed", id: id });
         
     } catch (err) {
         console.error(err);
@@ -175,7 +175,7 @@ router.delete('/:id/:channel_id', async (req, res) => {
             'DELETE FROM messages WHERE id = $1 AND user_id = $2 AND channel_id = $3',
             [id, req.userId, channel_id]
         );
-        res.json({ message: "Message Deleted" });
+        res.json({ message: "Message Deleted", id: id });
         
     } catch (err) {
         console.error(err);

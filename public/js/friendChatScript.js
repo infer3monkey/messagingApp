@@ -99,8 +99,7 @@ function sendMessage(newMessageText) {
     })
     .then(response => response.json())
     .then(data => {
-        socket.emit('loadMessages', 'sentMessage')
-        loadAllMessages(true)
+        socket.emit('friendChatNew', {id: data.id, channel_id: activeChat})
     })
     .catch(error => {
         console.error('Error Sending Message:', error)
@@ -135,6 +134,7 @@ function loadAllMessages(scrollBottom) {
 
             const newMessageDiv = document.createElement('div')
             newMessageDiv.className = "messageDivBorder"
+            newMessageDiv.id = `message-Div${data.messages[i].id}`
 
             const profilePictureElement = document.createElement('img')
 
@@ -164,8 +164,7 @@ function loadAllMessages(scrollBottom) {
                 const decryptedSymmetricKey = decryptor.decrypt(data.messages[i].encrypted_symmetric_key);
                 messageElement.textContent = CryptoJS.AES.decrypt(data.messages[i].text, decryptedSymmetricKey).toString(CryptoJS.enc.Utf8)
             }
-            
-            
+
             messageElement.className = "messageElement"
 
             timeStampElement.textContent = moment.utc(data.messages[i].timestamp).local().format('MM/DD/YY, h:mm a')
@@ -218,6 +217,97 @@ function loadAllMessages(scrollBottom) {
     })
 }
 
+// Used when a new message is sent or edited to create the div as needed
+async function createSingleMessageElementFriend(channel_id, message_id) {
+    return fetch(`/messages/${message_id}/${channel_id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': token
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        const newMessageDiv = document.createElement('div')
+        newMessageDiv.className = "messageDivBorder"
+        newMessageDiv.id = `messageDiv-${message_id}`
+
+        const messageId = data.messages.id
+
+        const profilePictureElement = document.createElement('img')
+
+        const messageElement = document.createElement('p')
+        const usernameElement = document.createElement('p')
+
+        const editButton = document.createElement('button')
+        const deleteButton = document.createElement('button')
+
+        const editedElement = document.createElement('p')
+        const timeStampElement = document.createElement('p')
+
+        profilePictureElement.src = "/images/basicUserImage.png"
+        profilePictureElement.id = "profilePicture"
+
+        usernameElement.textContent = data.messages.username + ":"
+        usernameElement.className = "usernameElement"
+
+        // Handle Decryption
+        if (data.requestUserId == data.messages.user_id) {
+            // Our Own Message
+            messageElement.textContent = CryptoJS.AES.decrypt(data.messages.text, symmetricKey).toString(CryptoJS.enc.Utf8)
+        } else {
+            // Their Message
+            const decryptedSymmetricKey = decryptor.decrypt(data.messages.encrypted_symmetric_key);
+            messageElement.textContent = CryptoJS.AES.decrypt(data.messages.text, decryptedSymmetricKey).toString(CryptoJS.enc.Utf8)
+        }
+
+        messageElement.className = "messageElement"
+
+        timeStampElement.textContent = moment.utc(data.messages.timestamp).local().format('MM/DD/YY, h:mm a')
+        timeStampElement.className = "editedElement"
+            
+        // Each Message Element has a unique message id which I will use with the document.getElementById
+        messageElement.id = `message-${message_id}`
+
+        editButton.onclick = function() {
+            editMessage(messageId, newMessageDiv)
+        }
+
+        deleteButton.onclick = function() {
+            deleteMessage(messageId, newMessageDiv)
+        }
+
+        editButton.className = "buttonElement"
+        editButton.textContent = "Edit"
+        deleteButton.className = "buttonElement"
+        deleteButton.textContent = "Delete"
+
+        newMessageDiv.appendChild(profilePictureElement)
+        newMessageDiv.appendChild(usernameElement)
+
+        newMessageDiv.appendChild(timeStampElement)
+
+        if (data.messages.edited) {
+            editedElement.textContent = "(Edited)"
+            editedElement.className = "editedElement"
+            newMessageDiv.appendChild(editedElement)
+        }
+
+        if (data.requestUserId == data.messages.user_id) {
+            newMessageDiv.appendChild(editButton)
+            newMessageDiv.appendChild(deleteButton)
+        }
+
+        newMessageDiv.appendChild(messageElement)
+
+        return newMessageDiv
+    })
+    .catch(error => {
+        console.error('Error Fetching All Messages:', error)
+        return null
+    })
+}
+
 function deleteMessage(messageId, messageDiv) {
     fetch(`/messages/${messageId}/${activeChat}`, {
         method: 'DELETE',
@@ -227,9 +317,7 @@ function deleteMessage(messageId, messageDiv) {
     })
     .then(response => response.json())
     .then(data => {
-        // Maybe check if it was successful?
-        socket.emit('loadMessages', 'deletedMessage')
-        messageDiv.remove()
+        socket.emit('friendChatDelete', {id: data.id, channel_id: activeChat})
     })
 }
 
@@ -263,24 +351,51 @@ function editMessage(messageId, messageDiv) {
         })
         .then(response => response.json())
         .then(data => {
-            socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
-            loadAllMessages(false) // Reload for yourself
+            socket.emit('friendChatEdit', {id: data.id, channel_id: activeChat})
         }).catch(error =>{
             console.log('Error Editing Message', error)
-            loadAllMessages(false)
         })
         
     }
 }
 
-// This will be run when a different client updated the chat with a new message/edit/delete
-socket.on('loadMessages', (msg) => {
-    const messageContainer = document.getElementById('messages')
-    if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
-        loadAllMessages(true); // If Already at the bottom auto scroll for them
-    } else {
-        loadAllMessages(false); // If browsing other messages don't auto scroll
+socket.on(`friendChatNew`, async (data) => {
+    // Add an element to the end
+    if (activeChat != data.channel_id) {
+        return
     }
+    console.log(`${username} Received New Message | Socket Event`)
+    const messageContainer = document.getElementById('messages')
+    const newMessageDiv = await createSingleMessageElementFriend(activeChat, data.id)
+    if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
+        messageContainer.appendChild(newMessageDiv)
+        scrollToBottom(messageContainer) // If Already at the bottom auto scroll for them
+    } else {
+        messageContainer.appendChild(newMessageDiv)
+    }
+});
+
+// Run When Someone Including Self Edited a Message
+socket.on(`friendChatEdit`, async (data) => {
+    // Edit Existing Element
+    if (activeChat != data.channel_id) {
+        return
+    }
+    console.log(`${username} Received Edit Message | Socket Event`)
+    const oldMessageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const editedMessageDiv = await createSingleMessageElementFriend(activeChat, data.id)
+    oldMessageDiv.replaceWith(editedMessageDiv)
+});
+
+// Run When Someone Including Self Deleted a Message
+socket.on(`friendChatDelete`, (data) => {
+    // Remove Existing Element
+    if (activeChat != data.channel_id) {
+        return
+    }
+    console.log(`${username} Received Delete Message | Socket Event`)
+    const messageDiv = document.getElementById(`messageDiv-${data.id}`)
+    messageDiv.remove()
 });
 
 checkIfValidToken()

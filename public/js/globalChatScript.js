@@ -27,8 +27,8 @@ function sendMessage(newMessageText) {
     })
     .then(response => response.json())
     .then(data => {
-        socket.emit('loadMessages', 'sentMessage')
-        loadAllMessages(true)
+        socket.emit('globalChatNew', {id: data.id})
+        //loadAllMessages(true)
     })
     .catch(error => {
         console.error('Error Sending Message:', error)
@@ -44,9 +44,8 @@ function deleteMessage(messageId, messageDiv) {
     })
     .then(response => response.json())
     .then(data => {
-        // Maybe check if it was successful?
-        socket.emit('loadMessages', 'deletedMessage')
-        messageDiv.remove()
+        socket.emit('globalChatDelete', { id: data.id })
+        //messageDiv.remove()
     })
 }
 
@@ -80,11 +79,12 @@ function editMessage(messageId, messageDiv) {
         })
         .then(response => response.json())
         .then(data => {
-            socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
-            loadAllMessages(false) // Reload for yourself
+            //socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
+            socket.emit('globalChatEdit', { id: data.id })
+            //loadAllMessages(false) // Reload for yourself
         }).catch(error =>{
             console.log('Error Editing Message', error)
-            loadAllMessages(false)
+            //loadAllMessages(false)
         })
         
     }
@@ -114,6 +114,7 @@ function loadAllMessages(scrollBottom) {
 
             const newMessageDiv = document.createElement('div')
             newMessageDiv.className = "messageDivBorder"
+            newMessageDiv.id = `messageDiv-${data.messages[i].id}`
 
             const profilePictureElement = document.createElement('img')
 
@@ -185,7 +186,6 @@ function loadAllMessages(scrollBottom) {
     .catch(error => {
         console.error('Error Fetching All Messages:', error)
     })
-    
 }
 
 checkIfValidToken()
@@ -193,7 +193,7 @@ loadAllMessages(true)
 
 document.getElementById("usernameTopRightElement").textContent = username
 
-// This will be run when a different client updated the chat with a new message/edit/delete
+/* This will be run when a different client updated the chat with a new message/edit/delete
 socket.on('loadMessages', (msg) => {
     const messageContainer = document.getElementById('messages')
     if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
@@ -201,4 +201,35 @@ socket.on('loadMessages', (msg) => {
     } else {
         loadAllMessages(false); // If browsing other messages don't auto scroll
     }
+});*/
+
+// Run When Someone Including Self Sent a New Message
+socket.on('globalChatNew', async (data) => {
+    // Add an element to the end
+    console.log(`${username} Received New Message | Socket Event`)
+    const messageContainer = document.getElementById('messages')
+    const newMessageDiv = await createSingleMessageElement(1, data.id)
+    if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
+        messageContainer.appendChild(newMessageDiv)
+        scrollToBottom(messageContainer) // If Already at the bottom auto scroll for them
+    } else {
+        messageContainer.appendChild(newMessageDiv)
+    }
+});
+
+// Run When Someone Including Self Edited a Message
+socket.on('globalChatEdit', async (data) => {
+    // Edit Existing Element
+    console.log(`${username} Received Edit Message | Socket Event`)
+    const oldMessageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const editedMessageDiv = await createSingleMessageElement(1, data.id)
+    oldMessageDiv.replaceWith(editedMessageDiv)
+});
+
+// Run When Someone Including Self Deleted a Message
+socket.on('globalChatDelete', (data) => {
+    // Remove Existing Element
+    console.log(`${username} Received Delete Message | Socket Event`)
+    const messageDiv = document.getElementById(`messageDiv-${data.id}`)
+    messageDiv.remove()
 });

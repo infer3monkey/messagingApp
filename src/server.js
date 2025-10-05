@@ -58,6 +58,37 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('loadMessages', msg); // Broadcast to all other online users to reload chat
     });
 
+    // Handling Efficient Message Loading Socket Events
+    socket.on('globalChatNew', (data) => {
+        //console.log('Tell Global Users New Message Sent')
+        io.emit('globalChatNew', {id: data.id})
+    });
+
+    socket.on('globalChatEdit', (data) => {
+        //console.log('Tell Global Users Message Edited')
+        io.emit('globalChatEdit', {id: data.id})
+    });
+
+    socket.on('globalChatDelete', (data) => {
+        //console.log('Tell Global Users Message Deleted')
+        io.emit('globalChatDelete', {id: data.id})
+    });
+
+    socket.on('friendChatNew', (data) => {
+        //console.log('Tell Friend Users New Message Sent')
+        io.emit(`friendChatNew`, {id: data.id, channel_id: data.channel_id})
+    });
+
+    socket.on('friendChatEdit', (data) => {
+        //console.log('Tell Friend Users Message Edited')
+        io.emit(`friendChatEdit`, {id: data.id, channel_id: data.channel_id})
+    });
+
+    socket.on('friendChatDelete', (data) => {
+        //console.log('Tell Friend Users Message Deleted')
+        io.emit(`friendChatDelete`, {id: data.id, channel_id: data.channel_id})
+    });
+
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
     });
