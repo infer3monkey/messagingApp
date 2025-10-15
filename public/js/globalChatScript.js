@@ -28,7 +28,6 @@ function sendMessage(newMessageText) {
     .then(response => response.json())
     .then(data => {
         socket.emit('globalChatNew', {id: data.id})
-        //loadAllMessages(true)
     })
     .catch(error => {
         console.error('Error Sending Message:', error)
@@ -45,7 +44,6 @@ function deleteMessage(messageId, messageDiv) {
     .then(response => response.json())
     .then(data => {
         socket.emit('globalChatDelete', { id: data.id })
-        //messageDiv.remove()
     })
 }
 
@@ -79,12 +77,9 @@ function editMessage(messageId, messageDiv) {
         })
         .then(response => response.json())
         .then(data => {
-            //socket.emit('loadMessages', 'editedMessage') // Tell other clients to reload
             socket.emit('globalChatEdit', { id: data.id })
-            //loadAllMessages(false) // Reload for yourself
         }).catch(error =>{
             console.log('Error Editing Message', error)
-            //loadAllMessages(false)
         })
         
     }
@@ -188,20 +183,10 @@ function loadAllMessages(scrollBottom) {
     })
 }
 
-checkIfValidToken()
+checkIfValidToken(token)
 loadAllMessages(true)
 
 document.getElementById("usernameTopRightElement").textContent = username
-
-/* This will be run when a different client updated the chat with a new message/edit/delete
-socket.on('loadMessages', (msg) => {
-    const messageContainer = document.getElementById('messages')
-    if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
-        loadAllMessages(true); // If Already at the bottom auto scroll for them
-    } else {
-        loadAllMessages(false); // If browsing other messages don't auto scroll
-    }
-});*/
 
 // Run When Someone Including Self Sent a New Message
 socket.on('globalChatNew', async (data) => {

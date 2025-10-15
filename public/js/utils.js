@@ -16,8 +16,8 @@ function openAddFriends(){
     window.location.href = '/addFriends'
 }
 
-function checkIfValidToken() {
-    fetch('/messages/verifyToken/', {
+export async function checkIfValidToken(token) {
+    return fetch('/messages/token/', {
         method: 'GET',
         headers: {
             'Authorization': token,
@@ -26,16 +26,20 @@ function checkIfValidToken() {
     })
     .then(response => {
         if (response.status >= 200 && response.status < 300) {
-            console.log("Token is Valid")
+            //console.log("Token is Valid")
+            return ("Valid Token")
             
         } else {
-            console.log("Token Invalid")
+            //console.log("Token Invalid")
             window.location.href = '/'
+            return ("Invalid Token")
+            
         }
     })
     .catch(error => {
         console.error('Error Validating Token:', error)
         window.location.href = '/'
+        return ("Error Validating Token")
     })
 }
 

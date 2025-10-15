@@ -398,6 +398,6 @@ socket.on(`friendChatDelete`, (data) => {
     messageDiv.remove()
 });
 
-checkIfValidToken()
+checkIfValidToken(token)
 document.getElementById("usernameTopRightElement").textContent = username
 loadActiveFriends()

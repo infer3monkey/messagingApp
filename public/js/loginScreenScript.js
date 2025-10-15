@@ -6,7 +6,7 @@ const publicKey = crypt.getPublicKey()
 const privateKey = crypt.getPrivateKey()
 
 // Check if the user already has a valid token, if they do then log them in and give them the message screen
-function checkIfValidToken() {
+function checkIfValidTokenLoginScreen(token) {
     fetch('/messages/verifyToken/', {
         method: 'GET',
         headers: {
@@ -84,4 +84,4 @@ function registerUser() {
     })
 }
 
-checkIfValidToken()
+checkIfValidTokenLoginScreen(token)

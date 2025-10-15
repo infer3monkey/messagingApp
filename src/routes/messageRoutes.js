@@ -183,7 +183,7 @@ router.delete('/:id/:channel_id', async (req, res) => {
     }
 })
 
-router.get('/verifyToken', (req, res) => {
+router.get('/token', (req, res) => {
     res.json({ message: "Token is Valid"})
 })
 

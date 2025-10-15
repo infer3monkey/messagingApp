@@ -160,7 +160,7 @@ document.getElementById('addFriendForm').addEventListener('submit', function(e) 
     }
 })
 
-checkIfValidToken()
+checkIfValidToken(token)
 document.getElementById("usernameTopRightElement").textContent = username
 loadPendingFriendRequests()
 loadActiveFriends()
