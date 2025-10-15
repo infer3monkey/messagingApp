@@ -1,3 +1,8 @@
+import { checkIfValidToken, createNewSymmetricKey, scrollToBottom, openGlobalChat, openAddFriends, logout } from "./utils.js";
+// Assign to window to make available in HTML buttons
+window.openAddFriends = openAddFriends
+window.openGlobalChat = openGlobalChat
+window.logout = logout
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
 const privateKey = localStorage.getItem(`${username}privateKey`) || null
@@ -401,3 +406,7 @@ socket.on(`friendChatDelete`, (data) => {
 checkIfValidToken(token)
 document.getElementById("usernameTopRightElement").textContent = username
 loadActiveFriends()
+
+window.sendMessage = sendMessage
+window.editMessage = editMessage
+window.deleteMessage = deleteMessage

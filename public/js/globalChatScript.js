@@ -1,3 +1,10 @@
+import { checkIfValidToken, createSingleMessageElement, scrollToBottom, openFriendChat, openAddFriends, logout } from "./utils.js";
+
+// Assign to window to make available in HTML buttons
+window.openFriendChat = openFriendChat;
+window.openAddFriends = openAddFriends;
+window.logout = logout;
+
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
 // Super Secret Key, only so plain text isn't stored in the database
@@ -186,6 +193,10 @@ function loadAllMessages(scrollBottom) {
 checkIfValidToken(token)
 loadAllMessages(true)
 
+window.sendMessage = sendMessage
+window.editMessage = editMessage
+window.deleteMessage = deleteMessage
+
 document.getElementById("usernameTopRightElement").textContent = username
 
 // Run When Someone Including Self Sent a New Message
@@ -193,7 +204,7 @@ socket.on('globalChatNew', async (data) => {
     // Add an element to the end
     console.log(`${username} Received New Message | Socket Event`)
     const messageContainer = document.getElementById('messages')
-    const newMessageDiv = await createSingleMessageElement(1, data.id)
+    const newMessageDiv = await createSingleMessageElement(1, data.id, token)
     if ( (messageContainer.scrollTop+messageContainer.clientHeight - messageContainer.scrollHeight) <= 1) {
         messageContainer.appendChild(newMessageDiv)
         scrollToBottom(messageContainer) // If Already at the bottom auto scroll for them
@@ -207,7 +218,7 @@ socket.on('globalChatEdit', async (data) => {
     // Edit Existing Element
     console.log(`${username} Received Edit Message | Socket Event`)
     const oldMessageDiv = document.getElementById(`messageDiv-${data.id}`)
-    const editedMessageDiv = await createSingleMessageElement(1, data.id)
+    const editedMessageDiv = await createSingleMessageElement(1, data.id, token)
     oldMessageDiv.replaceWith(editedMessageDiv)
 });
 

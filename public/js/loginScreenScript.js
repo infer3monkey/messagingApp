@@ -85,3 +85,6 @@ function registerUser() {
 }
 
 checkIfValidTokenLoginScreen(token)
+// Assign to window to make available in HTML buttons
+window.registerUser = registerUser
+window.loginUser = loginUser;

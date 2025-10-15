@@ -1,3 +1,8 @@
+import { checkIfValidToken, openGlobalChat, openFriendChat, logout } from "./utils.js"
+// Assign to window to make available in HTML buttons
+window.openFriendChat = openFriendChat
+window.openGlobalChat = openGlobalChat
+window.logout = logout
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
 
@@ -164,3 +169,7 @@ checkIfValidToken(token)
 document.getElementById("usernameTopRightElement").textContent = username
 loadPendingFriendRequests()
 loadActiveFriends()
+
+// Assign to window to make available in HTML buttons
+window.loadPendingFriendRequests = loadPendingFriendRequests
+window.loadActiveFriends = loadActiveFriends

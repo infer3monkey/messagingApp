@@ -1,18 +1,20 @@
-function logout() {
+const secretKey = `FireplaceSimpleEncryptionKey`
+
+export function logout() {
     localStorage.setItem('token', null)
     console.log("logged out")
     window.location.href = '/'
 }
 
-function openGlobalChat(){
+export function openGlobalChat(){
     window.location.href = '/globalChat/'
 }
 
-function openFriendChat(){
+export function openFriendChat(){
     window.location.href = '/friendChat/'
 }
 
-function openAddFriends(){
+export function openAddFriends(){
     window.location.href = '/addFriends'
 }
 
@@ -49,7 +51,7 @@ function getRandomChar() {
     return chars.charAt(randomIndex);
 }
 
-function createNewSymmetricKey(keyLength) {
+export function createNewSymmetricKey(keyLength) {
     let key = ""
     for(let i = 0; i < keyLength; i++) {
         key += getRandomChar()
@@ -57,12 +59,12 @@ function createNewSymmetricKey(keyLength) {
     return key
 }
 
-function scrollToBottom(messageContainer){
+export function scrollToBottom(messageContainer){
     messageContainer.scrollTop = messageContainer.scrollHeight
 }
 
 // Only for Global because of simpler decryption
-async function createSingleMessageElement(channel_id, message_id) {
+export async function createSingleMessageElement(channel_id, message_id, token) {
     return fetch(`/messages/${message_id}/${channel_id}`, {
         method: 'GET',
         headers: {
