@@ -235,7 +235,7 @@ async function createSingleMessageElementFriend(channel_id, message_id) {
 
         const newMessageDiv = document.createElement('div')
         newMessageDiv.className = "messageDivBorder"
-        newMessageDiv.id = `messageDiv-${message_id}`
+        newMessageDiv.id = `message-Div${message_id}`
 
         const messageId = data.messages.id
 
@@ -387,7 +387,7 @@ socket.on(`friendChatEdit`, async (data) => {
         return
     }
     console.log(`${username} Received Edit Message | Socket Event`)
-    const oldMessageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const oldMessageDiv = document.getElementById(`message-Div${data.id}`)
     const editedMessageDiv = await createSingleMessageElementFriend(activeChat, data.id)
     oldMessageDiv.replaceWith(editedMessageDiv)
 });
@@ -399,7 +399,7 @@ socket.on(`friendChatDelete`, (data) => {
         return
     }
     console.log(`${username} Received Delete Message | Socket Event`)
-    const messageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const messageDiv = document.getElementById(`message-Div${data.id}`)
     messageDiv.remove()
 });
 

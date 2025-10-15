@@ -78,7 +78,7 @@ export async function createSingleMessageElement(channel_id, message_id, token) 
 
         const newMessageDiv = document.createElement('div')
         newMessageDiv.className = "messageDivBorder"
-        newMessageDiv.id = `messageDiv-${message_id}`
+        newMessageDiv.id = `message-Div${message_id}`
 
         const messageId = data.messages.id
 

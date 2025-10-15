@@ -116,7 +116,7 @@ function loadAllMessages(scrollBottom) {
 
             const newMessageDiv = document.createElement('div')
             newMessageDiv.className = "messageDivBorder"
-            newMessageDiv.id = `messageDiv-${data.messages[i].id}`
+            newMessageDiv.id = `message-Div${data.messages[i].id}`
 
             const profilePictureElement = document.createElement('img')
 
@@ -217,7 +217,7 @@ socket.on('globalChatNew', async (data) => {
 socket.on('globalChatEdit', async (data) => {
     // Edit Existing Element
     console.log(`${username} Received Edit Message | Socket Event`)
-    const oldMessageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const oldMessageDiv = document.getElementById(`message-Div${data.id}`)
     const editedMessageDiv = await createSingleMessageElement(1, data.id, token)
     oldMessageDiv.replaceWith(editedMessageDiv)
 });
@@ -226,6 +226,6 @@ socket.on('globalChatEdit', async (data) => {
 socket.on('globalChatDelete', (data) => {
     // Remove Existing Element
     console.log(`${username} Received Delete Message | Socket Event`)
-    const messageDiv = document.getElementById(`messageDiv-${data.id}`)
+    const messageDiv = document.getElementById(`message-Div${data.id}`)
     messageDiv.remove()
 });
