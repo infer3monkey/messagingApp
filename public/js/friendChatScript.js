@@ -1,4 +1,5 @@
 import { checkIfValidToken, createNewSymmetricKey, scrollToBottom, openGlobalChat, openAddFriends, logout } from "./utils.js";
+import { changeProfanity } from "./badWordFilter.js";
 // Assign to window to make available in HTML buttons
 window.openAddFriends = openAddFriends
 window.openGlobalChat = openGlobalChat
@@ -86,7 +87,7 @@ function loadActiveFriends() {
 }
 
 function sendMessage(newMessageText) {
-    const cleanText = checkProfanity(newMessageText)
+    const cleanText = changeProfanity(newMessageText)
     const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, symmetricKey).toString()
     const encryptedSymmetricKey = encryptor.encrypt(symmetricKey);
     //console.log("Encrypted Message: ", encryptedMessageText, "\nEncrypted Key: ", encryptedSymmetricKey)
@@ -340,7 +341,7 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-        const cleanText = checkProfanity(messageContent)
+        const cleanText = changeProfanity(messageContent)
         const encryptedMessageContent = CryptoJS.AES.encrypt(cleanText, symmetricKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {

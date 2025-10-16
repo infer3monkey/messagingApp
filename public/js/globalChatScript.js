@@ -1,5 +1,5 @@
 import { checkIfValidToken, createSingleMessageElement, scrollToBottom, openFriendChat, openAddFriends, logout } from "./utils.js";
-
+import { changeProfanity } from "./badWordFilter.js";
 // Assign to window to make available in HTML buttons
 window.openFriendChat = openFriendChat;
 window.openAddFriends = openAddFriends;
@@ -19,7 +19,7 @@ socket.on('connect', () => {
 });
 
 function sendMessage(newMessageText) {
-    const cleanText = checkProfanity(newMessageText)
+    const cleanText = changeProfanity(newMessageText)
     const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
     fetch('/messages/', {
         method: 'POST',
@@ -68,7 +68,7 @@ function editMessage(messageId, messageDiv) {
     } else if (messageElement.tagName === "INPUT") {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
-        const cleanText = checkProfanity(messageContent)
+        const cleanText = changeProfanity(messageContent)
         const encryptedMessageContent = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {

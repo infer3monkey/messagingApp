@@ -1,3 +1,4 @@
+import { containsProfanity } from "./badWordFilter.js";
 const token = localStorage.getItem('token') || null
 let username = localStorage.getItem('username') || ""
 // Create the keys when loading the site to save time

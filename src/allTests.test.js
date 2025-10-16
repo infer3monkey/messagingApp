@@ -1,4 +1,5 @@
 // Importing Functions for Testing, Using Jest for Testing
+import { containsProfanity, changeProfanity } from '../public/js/badWordFilter.js';
 import {checkIfValidToken} from '../public/js/utils.js'
 import { jest, test, expect } from '@jest/globals';
 
@@ -41,3 +42,100 @@ describe('checkIfValidToken', () => {
         expect(result).toBe('Error Validating Token');
     })
 })
+
+// Tests for Custom Profanity Filter
+describe('changeProfanity', () =>{
+    // Testing changeProfanity Function which replaces any profanity found with *** 
+    test('Changing Bad String 1', () => {
+        const result = changeProfanity('assholeCheckbitch')
+        expect(result).toBe('***Check***')
+    })
+    test('Changing Bad String 2', () => {
+        const result = changeProfanity('cock_Burger')
+        expect(result).toBe('***_Burger')
+    })
+    test('Changing Bad String 3', () => {
+        const result = changeProfanity('fuckshit')
+        expect(result).toBe('******')
+    })
+    test('Changing Bad String 4', () => {
+        const result = changeProfanity('there are no shit words here')
+        expect(result).toBe('there are no *** words here')
+    })
+    test('Changing Bad String 5', () => {
+        const result = changeProfanity('I need to take a piss')
+        expect(result).toBe('I need to take a ***')
+    })
+    test('Changing Bad String 6', () => {
+        const result = changeProfanity('bastard')
+        expect(result).toBe('***')
+    })
+
+    test('Unchanged Good Message 1', () => {
+        const result = changeProfanity('perfectlyFineMessage')
+        expect(result).toBe('perfectlyFineMessage')
+    })
+    test('Unchanged Good Message 2', () => {
+        const result = changeProfanity('PerFecTly_FiNe_MesSaGe')
+        expect(result).toBe('PerFecTly_FiNe_MesSaGe')
+    })
+    test('Unchanged Good Message 3', () => {
+        const result = changeProfanity('I am not saying any atrocities')
+        expect(result).toBe('I am not saying any atrocities')
+    })
+
+    test('Empty String', () => {
+        const result = changeProfanity('')
+        expect(result).toBe('')
+    })
+}) 
+
+describe('containsProfanity', () => {
+     // Testing containsProfanity Function which if it finds any profanity it returns true, otherwise false
+     test('Bad String 1', () => {
+        const result = containsProfanity('assholeCheckbitch')
+        expect(result).toBe(true)
+    })
+    test('Bad String 2', () => {
+        const result = containsProfanity('cock_Burger')
+        expect(result).toBe(true)
+    })
+    test('Bad String 3', () => {
+        const result = containsProfanity('fuckshit')
+        expect(result).toBe(true)
+    })
+    test('Bad String 4', () => {
+        const result = containsProfanity('there are no shit words here')
+        expect(result).toBe(true)
+    })
+    test('Bad String 5', () => {
+        const result = containsProfanity('I need to take a piss')
+        expect(result).toBe(true)
+    })
+    test('Bad String 6', () => {
+        const result = containsProfanity('bastard')
+        expect(result).toBe(true)
+    })
+
+    test('Good Message 1', () => {
+        const result = containsProfanity('perfectlyFineMessage')
+        expect(result).toBe(false)
+    })
+    test('Good Message 2', () => {
+        const result = containsProfanity('PerFecTly_FiNe_MesSaGe')
+        expect(result).toBe(false)
+    })
+    test('Good Message 3', () => {
+        const result = containsProfanity('I am not saying any atrocities')
+        expect(result).toBe(false)
+    })
+
+    test('Empty String', () => {
+        const result = containsProfanity('')
+        expect(result).toBe(false)
+    })
+})
+
+// Tests for Creating a Random Symmetric Key
+
+// Tests for Global Chat Encryption/Decryption
