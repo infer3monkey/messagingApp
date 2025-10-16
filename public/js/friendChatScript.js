@@ -8,6 +8,7 @@ const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
 const privateKey = localStorage.getItem(`${username}privateKey`) || null
 let symmetricKey = null
+const symmetricKeyLength = 12
 const encryptor = new JSEncrypt()
 const decryptor = new JSEncrypt()
 decryptor.setPrivateKey(privateKey)
@@ -35,7 +36,7 @@ function switchActiveChat(channelId, friendName) {
             let friendUsernameElement = document.getElementById("friendUsernameText")
             friendUsernameElement.textContent = `Chat With ${friendName}`
             encryptor.setPublicKey(publicKey)
-            symmetricKey = createNewSymmetricKey(12)
+            symmetricKey = createNewSymmetricKey(symmetricKeyLength)
             localStorage.setItem(`${channelId}${username}symmetricKey`, symmetricKey)
             loadAllMessages(true) // Loading Messages After Switching Active Chat
         })

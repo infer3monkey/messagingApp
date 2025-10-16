@@ -1,6 +1,6 @@
 // Importing Functions for Testing, Using Jest for Testing
 import { containsProfanity, changeProfanity } from '../public/js/badWordFilter.js';
-import {checkIfValidToken} from '../public/js/utils.js'
+import {checkIfValidToken, createNewSymmetricKey} from '../public/js/utils.js'
 import { jest, test, expect } from '@jest/globals';
 
 global.fetch = jest.fn();
@@ -133,6 +133,24 @@ describe('containsProfanity', () => {
     test('Empty String', () => {
         const result = containsProfanity('')
         expect(result).toBe(false)
+    })
+})
+
+describe('symmetricKeyCreation', () => {
+    // Create a Hashmap, Start Creating Symmetric Keys of the same size (has to be big enough to beat probability of two keys being the same)
+    // Make sure key doesn't exist already, keep adding keys to the hashmap and checking until confident algorithm works
+    test('createNewSymmetricKey Hashmap Test', () => {
+        hashmap = {}
+        keyLength = 12 // Probability is (1/26)^keyLength, 12 should be more than enough to make it highly unlikely for identical keys
+        sampleSize = 250 // Creating 250 keys for the test
+        for(let i = 0; i < sampleSize; i++) {
+            let tempKey = createNewSymmetricKey(keyLength)
+            if(tempKey in hashmap) {
+                // Identical Keys, Could be a coincidence but likely means algorithm is not as random as it should be
+                throw new Error('Duplicate Key Found')
+            }
+            hashmap[tempKey] = ""
+        }
     })
 })
 
