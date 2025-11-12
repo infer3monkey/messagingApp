@@ -1,20 +1,23 @@
 // Importing Functions for Testing, Using Jest for Testing
 import { containsProfanity, changeProfanity } from '../public/js/badWordFilter.js';
-import {checkIfValidToken, createNewSymmetricKey} from '../public/js/utils.js'
-import { jest, test, expect } from '@jest/globals';
+import {checkIfValidToken, createNewSymmetricKey, encryptGlobalMessage, decryptGlobalMessage} from '../public/js/utils.js';
 
+import { jest, test, expect } from '@jest/globals';
 global.fetch = jest.fn();
 
 // Tests for checkIfValidToken
 describe('checkIfValidToken', () => {
 
-    test('Validity of Valid Token', async () => {
-        fetch.mockResolvedValueOnce({ status: 200 }); // Simulating Invalid Response From Server
-        // Allowing function to change window location without errors
+     // Allowing the tests to change window location without errors
+    beforeEach(() => {
         Object.defineProperty(global, 'window', {
             value: { location: { href: '' } },
             writable: true,
         });
+    });
+
+    test('Validity of Valid Token', async () => {
+        fetch.mockResolvedValueOnce({ status: 200 }); // Simulating Invalid Response From Server
         // Passing in a valid Token to the function, will fail if database is reset
         const result = await checkIfValidToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYwNTYxODE4LCJleHAiOjE3NjA2NDgyMTh9.TyglCpVwytPrmNGHvI9oOQoVdqMOLDPwi9JN4GugY2A');
         expect(result).toBe('Valid Token');
@@ -23,10 +26,6 @@ describe('checkIfValidToken', () => {
     test('Validity of Invalid Token', async () => {
         fetch.mockResolvedValueOnce({ status: 401 }); // Simulating Invalid Response From Server
         // Allowing function to change window location without errors
-        Object.defineProperty(global, 'window', {
-            value: { location: { href: '' } },
-            writable: true,
-        });
         const result = await checkIfValidToken('token123'); // Passing in an invalid Token to the function
         expect(result).toBe('Invalid Token');
     })
@@ -34,10 +33,6 @@ describe('checkIfValidToken', () => {
     test('Server Error Returning Error Validating Token', async () => {
         fetch.mockRejectedValueOnce(new Error('Network error')); // Simulating Server Failure, notice rejected instead of resolved
         // Allowing function to change window location without errors
-        Object.defineProperty(global, 'window', {
-            value: { location: { href: '' } },
-            writable: true,
-        });
         const result = await checkIfValidToken(''); // Token Passed In Does not Matter
         expect(result).toBe('Error Validating Token');
     })
@@ -136,6 +131,7 @@ describe('containsProfanity', () => {
     })
 })
 
+// Test for Creating a Random Symmetric Key
 describe('symmetricKeyCreation', () => {
     // Create a Hashmap, Start Creating Symmetric Keys of the same size (has to be big enough to beat probability of two keys being the same)
     // Make sure key doesn't exist already, keep adding keys to the hashmap and checking until confident algorithm works
@@ -154,6 +150,33 @@ describe('symmetricKeyCreation', () => {
     })
 })
 
-// Tests for Creating a Random Symmetric Key
+/* Tests for Global Chat Encryption/Decryption, Requires Web Bundler I believe so Implement later
+describe('globalChatEncryptionAndDecryption', () => {
+    test('Encrypting and Decrypting Message 1', () => {
+        const message = "Pretend this is a Cool Message"
+        const encryptedMessage = encryptGlobalMessage(message)
+        const decryptedMessage = decryptGlobalMessage(encryptedMessage)
+        expect(decryptedMessage).toBe(message)
+    })
 
-// Tests for Global Chat Encryption/Decryption
+    test('Encrypting and Decrypting Message 2', () => {
+        const message = "wowThereAreNoSpacesHere!"
+        const encryptedMessage = encryptGlobalMessage(message)
+        const decryptedMessage = decryptGlobalMessage(encryptedMessage)
+        expect(decryptedMessage).toBe(message)
+    })
+
+    test('Encrypting and Decrypting Message 3', () => {
+        const message = "!?-3884yjhasjdhjgkas"
+        const encryptedMessage = encryptGlobalMessage(message)
+        const decryptedMessage = decryptGlobalMessage(encryptedMessage)
+        expect(decryptedMessage).toBe(message)
+    })
+
+    test('Encrypting and Decrypting Message 4', () => {
+        const message = "manthisencryptionanddecryptioncanworkonanysortofmessage123125971651974618t38267"
+        const encryptedMessage = encryptGlobalMessage(message)
+        const decryptedMessage = decryptGlobalMessage(encryptedMessage)
+        expect(decryptedMessage).toBe(message)
+    })
+})*/

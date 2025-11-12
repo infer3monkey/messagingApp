@@ -1,15 +1,11 @@
-import { checkIfValidToken, createSingleMessageElement, scrollToBottom, openFriendChat, openAddFriends, logout } from "./utils.js";
+import { encryptGlobalMessage, decryptGlobalMessage, checkIfValidToken, createSingleMessageElement, scrollToBottom, openFriendChat, openAddFriends, logout } from "./utils.js";
 import { changeProfanity } from "./badWordFilter.js";
-// Assign to window to make available in HTML buttons
-window.openFriendChat = openFriendChat;
-window.openAddFriends = openAddFriends;
-window.logout = logout;
+
+// Super Secret Key, only so plain text isn't stored in the database
+// Global Messages anyways, so should be seen as unsafe
 
 const token = localStorage.getItem('token') || null
 const username = localStorage.getItem('username') || ""
-// Super Secret Key, only so plain text isn't stored in the database
-// Global Messages anyways, so should be seen as unsafe
-const secretKey = `FireplaceSimpleEncryptionKey`
 
 // Handling Socket Connection
 const socket = io();
@@ -20,7 +16,7 @@ socket.on('connect', () => {
 
 function sendMessage(newMessageText) {
     const cleanText = changeProfanity(newMessageText)
-    const encryptedMessageText = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
+    const encryptedMessageText = encryptGlobalMessage(cleanText)
     fetch('/messages/', {
         method: 'POST',
         headers: {
@@ -69,7 +65,7 @@ function editMessage(messageId, messageDiv) {
         // Edit the Message and reload messages for all users
         const messageContent = messageElement.value
         const cleanText = changeProfanity(messageContent)
-        const encryptedMessageContent = CryptoJS.AES.encrypt(cleanText, secretKey).toString()
+        const encryptedMessageContent = encryptGlobalMessage(cleanText)
         // Send the New Text to the server
         fetch(`/messages/${messageId}`, {
             method: 'PUT',
@@ -137,7 +133,7 @@ function loadAllMessages(scrollBottom) {
             usernameElement.textContent = data.messages[i].username + ":"
             usernameElement.className = "usernameElement"
 
-            messageElement.textContent = CryptoJS.AES.decrypt(data.messages[i].text, secretKey).toString(CryptoJS.enc.Utf8) // Decrypting
+            messageElement.textContent = decryptGlobalMessage(data.messages[i].text)
             messageElement.className = "messageElement"
 
             timeStampElement.textContent = moment.utc(data.messages[i].timestamp).local().format('MM/DD/YY, h:mm a')
@@ -198,6 +194,11 @@ window.editMessage = editMessage
 window.deleteMessage = deleteMessage
 
 document.getElementById("usernameTopRightElement").textContent = username
+
+// Assign to window to make available in HTML buttons
+window.openFriendChat = openFriendChat;
+window.openAddFriends = openAddFriends;
+window.logout = logout;
 
 // Run When Someone Including Self Sent a New Message
 socket.on('globalChatNew', async (data) => {
