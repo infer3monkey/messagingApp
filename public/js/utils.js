@@ -1,3 +1,5 @@
+//import { decryptGlobalMessage } from "./globalChatScript.js";
+
 const secretKey = `FireplaceSimpleEncryptionKey`
 
 export function logout() {
@@ -16,6 +18,14 @@ export function openFriendChat(){
 
 export function openAddFriends(){
     window.location.href = '/addFriends'
+}
+
+export function encryptGlobalMessage(message) {
+    return CryptoJS.AES.encrypt(message, secretKey).toString()
+}
+
+export function decryptGlobalMessage(message) {
+    return CryptoJS.AES.decrypt(message, secretKey).toString(CryptoJS.enc.Utf8)
 }
 
 export async function checkIfValidToken(token) {
@@ -74,7 +84,7 @@ export async function createSingleMessageElement(channel_id, message_id, token) 
     .then(response => response.json())
     .then(data => {
 
-        console.log("Successfully Retrieved Singular Message")
+        //console.log("Successfully Retrieved Singular Message")
 
         const newMessageDiv = document.createElement('div')
         newMessageDiv.className = "messageDivBorder"
@@ -99,7 +109,7 @@ export async function createSingleMessageElement(channel_id, message_id, token) 
         usernameElement.textContent = data.messages.username + ":"
         usernameElement.className = "usernameElement"
 
-        messageElement.textContent = CryptoJS.AES.decrypt(data.messages.text, secretKey).toString(CryptoJS.enc.Utf8) // Decrypting
+        messageElement.textContent = decryptGlobalMessage(data.messages.text)
         messageElement.className = "messageElement"
 
         timeStampElement.textContent = moment.utc(data.messages.timestamp).local().format('MM/DD/YY, h:mm a')
