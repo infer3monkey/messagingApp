@@ -13,6 +13,7 @@
       depends_on:
         - db
       command: npm run prod
+      restart: unless-stopped
     db:
       image: postgres:15-alpine
       restart: always
